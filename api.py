@@ -1,13 +1,32 @@
 import requests
 
-url = 'http://www.ulaval.ca/'
+def lister_parties(idul):
+    idul = str(idul)
+    url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
+    rep = requests.get(url_base+'lister/', params={'idul': idul})
+    rep = rep.json()
+    if 'message' in rep.keys():
+        raise RuntimeError(f"{rep['message']}")
+    else: 
+        return rep
 
-rep = requests.get(url)
+def débuter_partie(idul):
+    idul = str (idul)
+    url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
+    rep = requests.post(url_base+'débuter/', data={'idul': idul})
+    rep = rep.json()
+    if 'message' in rep.keys():
+        raise RuntimeError(f"{rep['message']}")
+    else:
+        return (rep['id'], rep['état'])
 
-if rep.status_code == 200:
-    # la réponse est bonne, afficher son contenu
-    print(rep.text)
-    
-else:
-    # afficher un message d'erreur
-    print(f"Le GET sur {url} a produit le code d'erreur {rep.status_code}.")
+def jouer_coup(id_partie, type_coup, position):
+    url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
+    rep = requests.post(url_base+'jouer/', data={'id': id_partie, 'type': type_coup, 'pos': position})
+    rep = rep.json()
+    if 'message' in rep.keys():
+        raise RuntimeError(f"{rep['message']}")
+    if 'gagnant' in rep.keys():
+        raise StopIteration(f"{rep['gagnant']}")
+    else: 
+        return rep['état']
