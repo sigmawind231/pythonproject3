@@ -2,7 +2,7 @@
 import requests
 
 def lister_parties(idul):
-    """ Fonction qui liste les 20 dernières parties de "idul""""
+    """ Fonction qui liste les 20 dernières parties de "idul"""
     idul = str(idul)
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
     rep = requests.get(url_base+'lister/', params={'idul': idul})
@@ -13,7 +13,7 @@ def lister_parties(idul):
         return rep
 
 def débuter_partie(idul):
-    """ Fonction qui permet de commencer Quoridor""""
+    """ Fonction qui permet de commencer Quoridor"""
     idul = str(idul)
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
     rep = requests.post(url_base+'débuter/', data={'idul': idul})
@@ -24,7 +24,7 @@ def débuter_partie(idul):
         return (rep['id'], rep['état'])
 
 def jouer_coup(id_partie, type_coup, position):
-    """ Fonction qui permet de joueur un coup sur le jeu""""
+    """ Fonction qui permet de joueur un coup sur le jeu"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
     rep = requests.post(url_base+'jouer/', 
                         data={'id': id_partie, 'type': type_coup,
