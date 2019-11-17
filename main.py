@@ -9,17 +9,17 @@ def analyser_commande():
     parser = argparse.ArgumentParser(
         description="Jeu Quoridor - phase 1")
     parser.add_argument(dest='idul', type=str, help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister", dest= 'lister',
+    parser.add_argument("-l", "--lister", dest='lister',
                         action="store_true",
                         help="Lister les identifiants de vos 20 dernières parties.")
-    __args__ = parser.parse_args()
-    return __args__
+    args = parser.parse_args()
+    return args
 
 def afficher_damier_ascii(infojeu):
     """Permet de convertir un dictionnaire en damier ascii"""
     lignes = []
     lignes += list("Légende: 1="+ str(infojeu["joueurs"][0]["nom"])+
-            ', 2='+str(infojeu["joueurs"][1]["nom"]) + "\n")
+                   ', 2='+str(infojeu["joueurs"][1]["nom"]) + "\n")
     lignes += list("   "+"-"*35+"\n")
     for i in range(1, 10):
         lignes += str(10-i) + " | "
@@ -43,7 +43,7 @@ def afficher_damier_ascii(infojeu):
             lignes += list(". |")
         if i != 9:
             lignes += list("\n  |")
-        for k in range(1,9):
+        for k in range(1, 9):
             if i != 9:
                 if [k, 10-i] in infojeu["murs"]["horizontaux"]:
                     lignes += list("----")
@@ -68,14 +68,14 @@ def afficher_damier_ascii(infojeu):
     print(lignes)
 
 if __name__ == "__main__":
-    args = analyser_commande()
-    if args.lister:
-        print(lister_parties(args.idul))
+    __args__ = analyser_commande()
+    if __args__.lister:
+        print(lister_parties(__args__.idul))
     else:
-        infojeutupple = débuter_partie(args.idul)
-        infojeu1 = infojeutupple[1]
-        afficher_damier_ascii(infojeu1)
+        __infojeutupple__ = débuter_partie(__args__.idul)
+        __infojeu1__ = __infojeutupple__[1]
+        afficher_damier_ascii(__infojeu1__)
         while True:
-            coup_type = input("Choisir un coup: 'D', 'MH' ou 'MV'")
-            position_coup = input("veuillez inscrire la position du coup sous format '(x, y)'")
-            afficher_damier_ascii(jouer_coup(infojeutupple[0], coup_type, position_coup))
+            __coup_type__ = input("Choisir un coup: 'D', 'MH' ou 'MV'")
+            __position_coup__ = input("veuillez inscrire la position du coup sous format '(x, y)'")
+            afficher_damier_ascii(jouer_coup(__infojeutupple__[0], __coup_type__, __position_coup__))

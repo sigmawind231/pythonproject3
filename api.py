@@ -26,9 +26,9 @@ def débuter_partie(idul):
 def jouer_coup(id_partie, type_coup, position):
     """ Fonction qui permet de joueur un coup sur le jeu"""
     url_base = 'https://python.gel.ulaval.ca/quoridor/api/'
-    rep = requests.post(url_base+'jouer/', 
+    rep = requests.post(url_base+'jouer/',
                         data={'id': id_partie, 'type': type_coup,
-                        'pos': position})
+                              'pos': position})
     rep = rep.json()
     if 'message' in rep.keys():
         raise RuntimeError(f"{rep['message']}")
