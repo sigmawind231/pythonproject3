@@ -78,4 +78,5 @@ if __name__ == "__main__":
         while True:
             __coup_type__ = input("Choisir un coup: 'D', 'MH' ou 'MV'")
             __position_coup__ = input("veuillez inscrire la position du coup sous format '(x, y)'")
-            afficher_damier_ascii(jouer_coup(__infojeutupple__[0], __coup_type__, __position_coup__))
+            afficher_damier_ascii(jouer_coup(__infojeutupple__[0], __coup_type__, \
+                                  __position_coup__))
