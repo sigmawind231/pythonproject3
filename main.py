@@ -1,7 +1,7 @@
 """Module principal du jeu"""
 import argparse
 
-from api import débuter_partie, jouer_coup
+from api import débuter_partie, jouer_coup, lister_parties
 
 
 def analyser_commande():
@@ -9,11 +9,11 @@ def analyser_commande():
     parser = argparse.ArgumentParser(
         description="Jeu Quoridor - phase 1")
     parser.add_argument(dest='idul', type=str, help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister",
+    parser.add_argument("-l", "--lister", dest= 'lister',
                         action="store_true",
                         help="Lister les identifiants de vos 20 dernières parties.")
-    args = parser.parse_args()
-    return args
+    __args__ = parser.parse_args()
+    return __args__
 
 def afficher_damier_ascii(infojeu):
     """Permet de convertir un dictionnaire en damier ascii"""
@@ -69,11 +69,13 @@ def afficher_damier_ascii(infojeu):
 
 if __name__ == "__main__":
     args = analyser_commande()
-    infojeutupple = débuter_partie(args.idul)
-    infojeu1 = infojeutupple[1]
-    afficher_damier_ascii(infojeu1)
-    result = None
-    while result == None:
-        coup_type = input("Choisir un coup: 'D', 'MH' ou 'MV'")
-        position_coup = input("veuillez inscrire la position du coup sous format (x, y)")
-        afficher_damier_ascii(jouer_coup(infojeutupple[0], coup_type, position_coup))
+    if args.lister:
+        print(lister_parties(args.idul))
+    else:
+        infojeutupple = débuter_partie(args.idul)
+        infojeu1 = infojeutupple[1]
+        afficher_damier_ascii(infojeu1)
+        while True:
+            coup_type = input("Choisir un coup: 'D', 'MH' ou 'MV'")
+            position_coup = input("veuillez inscrire la position du coup sous format '(x, y)'")
+            afficher_damier_ascii(jouer_coup(infojeutupple[0], coup_type, position_coup))
