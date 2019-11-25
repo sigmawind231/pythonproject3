@@ -1,18 +1,91 @@
+<<<<<<< HEAD
+=======
+import networkx as nx
+
+
+import random as rnd
+
+def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
+    """
+    Crée le graphe des déplacements admissibles pour les joueurs.
+
+    :param joueurs: une liste des positions (x,y) des joueurs.
+    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
+    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
+    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
+    """
+    graphe = nx.DiGraph()
+
+    # pour chaque colonne du damier
+    for x in range(1, 10):
+        # pour chaque ligne du damier
+        for y in range(1, 10):
+            # ajouter les arcs de tous les déplacements possibles pour cette tuile
+            if x > 1:
+                graphe.add_edge((x, y), (x-1, y))
+            if x < 9:
+                graphe.add_edge((x, y), (x+1, y))
+            if y > 1:
+                graphe.add_edge((x, y), (x, y-1))
+            if y < 9:
+                graphe.add_edge((x, y), (x, y+1))
+    # retirer tous les arcs qui croisent les murs horizontaux
+    for x, y in murs_horizontaux:
+        graphe.remove_edge((x, y-1), (x, y))
+        graphe.remove_edge((x, y), (x, y-1))
+        graphe.remove_edge((x+1, y-1), (x+1, y))
+        graphe.remove_edge((x+1, y), (x+1, y-1))
+
+    # retirer tous les arcs qui croisent les murs verticaux
+    for x, y in murs_verticaux:
+        graphe.remove_edge((x-1, y), (x, y))
+        graphe.remove_edge((x, y), (x-1, y))
+        graphe.remove_edge((x-1, y+1), (x, y+1))
+        graphe.remove_edge((x, y+1), (x-1, y+1))
+
+    # retirer tous les arcs qui pointent vers les positions des joueurs
+    # et ajouter les sauts en ligne droite ou en diagonale, selon le cas
+    for joueur in map(tuple, joueurs):
+
+        for prédécesseur in list(graphe.predecessors(joueur)):
+            graphe.remove_edge(prédécesseur, joueur)
+
+            # si admissible, ajouter un lien sauteur
+            successeur = (2*joueur[0]-prédécesseur[0], 2*joueur[1]-prédécesseur[1])
+
+            if successeur in graphe.successors(joueur) and successeur not in joueurs:
+                # ajouter un saut en ligne droite
+                graphe.add_edge(prédécesseur, successeur)
+
+            else:
+                # ajouter les liens en diagonal
+                for successeur in list(graphe.successors(joueur)):
+                    if prédécesseur != successeur and successeur not in joueurs:
+                        graphe.add_edge(prédécesseur, successeur)
+
+    # ajouter les noeuds objectifs des deux joueurs
+    for x in range(1, 10):
+        graphe.add_edge((x, 9), 'B1')
+        graphe.add_edge((x, 1), 'B2')
+
+    return graphe
+
+infojeu = {
+    "joueurs": [
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 1]}
+    ],
+    "murs": {
+        "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+    }
+}
+>>>>>>> e5f2344e0e49386fc85faa841c9d1b915b90c482
 
 class QuoridorError(Exception):
     pass
 
 class Quoridor:
-    infojeu = {
-        "joueurs": [
-            {"nom": "idul", "murs": 7, "pos": [5, 6]},
-            {"nom": "automate", "murs": 3, "pos": [5, 7]}
-        ],
-        "murs": {
-            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-            "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-        }
-    }
     def __init__(self, joueurs, murs=None):
         """
         Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés, 
@@ -32,10 +105,10 @@ class Quoridor:
 
         :raises QuoridorError: si l'argument 'joueurs' n'est pas itérable.
         :raises QuoridorError: si l'itérable de joueurs en contient plus de deux.
-        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif. **
-        :raises QuoridorError: si la position d'un joueur est invalide. **
+        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif.
+        :raises QuoridorError: si la position d'un joueur est invalide.
         :raises QuoridorError: si l'argument 'murs' n'est pas un dictionnaire lorsque présent.
-        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20. **
+        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide. **
         """
         if hasattr(joueurs, '__iter__') == False:
@@ -61,6 +134,20 @@ class Quoridor:
             ],
             "murs": murs
         }
+        if self.infojeu["joueurs"][0]["murs"] > 10 or self.infojeu["joueurs"][0]["murs"] < 0:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["murs"] > 10 or self.infojeu["joueurs"][1]["murs"] < 0:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["pos"][0] < 1 or self.infojeu["joueurs"][0]["pos"][0] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["pos"][1] < 1 or self.infojeu["joueurs"][0]["pos"][1] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["pos"][0] < 1 or self.infojeu["joueurs"][1]["pos"][0] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
+            raise QuoridorError
 
     def __str__(self):
         """
@@ -129,15 +216,19 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide (en dehors du damier).
         :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
-        if infojeu[f'{joueur}'] != 1 or infojeu[f'{joueur}'] != 2:
-            raise QuoridorError
-        elif 9 < infojeu[f'{joueur}']['pos'][0] < 1:
-            raise QuoridorError
-        elif 9 < infojeu[f'{joueur}']['pos'][1] < 1:
-            raise QuoridorError
-        #elif 
-        infojeu[f'{joueur}']['pos'] = position
 
+        jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
+        mhfonction = self.infojeu['murs']['horizontaux']
+        mvfonction = self.infojeu['murs']['verticaux']
+        if joueur != 1 and joueur != 2:
+            raise QuoridorError
+        elif 9 < position[0] < 1:
+            raise QuoridorError
+        elif 9 < position[1] < 1:
+            raise QuoridorError
+        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
+            raise QuoridorError 
+        self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
     def état_partie(self):
         """
@@ -166,7 +257,7 @@ class Quoridor:
         situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes y et y+1.
         """
-        pass
+        return self.infojeu
 
     def jouer_coup(self, joueur):
         """
@@ -178,7 +269,18 @@ class Quoridor:
         :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
         :raises QuoridorError: si la partie est déjà terminée.
         """
-        pass
+        if joueur != 1 and joueur != 2:
+            raise QuoridorError
+        if self.partie_terminée == False:
+            raise QuoridorError
+        jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
+        mhfonction = self.infojeu['murs']['horizontaux']
+        mvfonction = self.infojeu['murs']['verticaux']
+        posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
+        while type(posrandom) is str:
+            posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
+        self.déplacer_jeton(joueur, posrandom)
+
     def partie_terminée(self):
         """
         Déterminer si la partie est terminée.
@@ -196,7 +298,6 @@ class Quoridor:
         else:
             return False
         
-
     def placer_mur(self, joueur, position, orientation):
          """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
@@ -241,7 +342,16 @@ class Quoridor:
         else:
             raise QuoridorError
 
-joueurs = ["steph", "étienne"]
-test1 = Quoridor(joueurs)
-print(test1.infojeu)
+joueurs = [
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 2]}
+    ]
+murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+    }
+test1 = Quoridor(joueurs, murstest)
 print(test1)
+test1.jouer_coup(1)
+print(test1)
+print(test1.infojeu)
+##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
