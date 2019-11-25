@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-infojeu = {
-    "joueurs": [
-        {"nom": "idul", "murs": 7, "pos": [5, 1]},
-        {"nom": "automate", "murs": 3, "pos": [5, 1]}
-    ],
-    "murs": {
-        "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-    }
-}
-=======
->>>>>>> efd2ed4bd6c3fc48d847334d7e93ef352e2af21d
 
 class QuoridorError(Exception):
     pass
@@ -211,7 +198,7 @@ class Quoridor:
         
 
     def placer_mur(self, joueur, position, orientation):
-        """
+         """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
 
         :param joueur: le numéro du joueur (1 ou 2).
@@ -222,7 +209,37 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour cette orientation.
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
-        pass
+        if self.infojeu['joueurs'][joueur-1]['murs'] == 10: #:raises QuoridorError: si le joueur a déjà placé tous ses murs.
+            raise QuoridorError
+        elif joueur == 1 or joueur == 2:#:raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
+            posx = position[0]
+            posy = position[1]
+            if orientation == 'horizontal':
+                for i, value in enumerate(self.infojeu['murs']['horizontaux']):
+                    if value[0] == posx and value[1] == posy:#:raises QuoridorError: si un mur occupe déjà cette position.
+                        raise QuoridorError
+                    elif value[0]+1 == posx and value[1]-1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                    elif value[0]+1== posx and value[1] == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                    elif posx == 9:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                infojeu['murs']['horizontaux'].append([posx, posy])
+                afficher_damier_ascii(infojeu)
+            elif orientation == 'vertical':
+                for i, value in enumerate(self.infojeu['murs']['verticaux']):
+                    if value[0] == posx and value[1] == posy:#:raises QuoridorError: si un mur occupe déjà cette position.
+                        raise QuoridorError
+                    elif value[0]-1 == posx and value[1]+1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                    elif value[0]== posx and value[1]+1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                    elif posy == 9:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                        raise QuoridorError
+                self.infojeu['murs']['verticaux'].append([posx, posy])
+                afficher_damier_ascii(infojeu)
+        else:
+            raise QuoridorError
 
 joueurs = ["steph", "étienne"]
 test1 = Quoridor(joueurs)
