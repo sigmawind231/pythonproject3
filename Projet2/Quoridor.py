@@ -1,3 +1,71 @@
+import networkx as nx
+
+
+def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
+    """
+    Crée le graphe des déplacements admissibles pour les joueurs.
+
+    :param joueurs: une liste des positions (x,y) des joueurs.
+    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
+    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
+    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
+    """
+    graphe = nx.DiGraph()
+
+    # pour chaque colonne du damier
+    for x in range(1, 10):
+        # pour chaque ligne du damier
+        for y in range(1, 10):
+            # ajouter les arcs de tous les déplacements possibles pour cette tuile
+            if x > 1:
+                graphe.add_edge((x, y), (x-1, y))
+            if x < 9:
+                graphe.add_edge((x, y), (x+1, y))
+            if y > 1:
+                graphe.add_edge((x, y), (x, y-1))
+            if y < 9:
+                graphe.add_edge((x, y), (x, y+1))
+    # retirer tous les arcs qui croisent les murs horizontaux
+    for x, y in murs_horizontaux:
+        graphe.remove_edge((x, y-1), (x, y))
+        graphe.remove_edge((x, y), (x, y-1))
+        graphe.remove_edge((x+1, y-1), (x+1, y))
+        graphe.remove_edge((x+1, y), (x+1, y-1))
+
+    # retirer tous les arcs qui croisent les murs verticaux
+    for x, y in murs_verticaux:
+        graphe.remove_edge((x-1, y), (x, y))
+        graphe.remove_edge((x, y), (x-1, y))
+        graphe.remove_edge((x-1, y+1), (x, y+1))
+        graphe.remove_edge((x, y+1), (x-1, y+1))
+
+    # retirer tous les arcs qui pointent vers les positions des joueurs
+    # et ajouter les sauts en ligne droite ou en diagonale, selon le cas
+    for joueur in map(tuple, joueurs):
+
+        for prédécesseur in list(graphe.predecessors(joueur)):
+            graphe.remove_edge(prédécesseur, joueur)
+
+            # si admissible, ajouter un lien sauteur
+            successeur = (2*joueur[0]-prédécesseur[0], 2*joueur[1]-prédécesseur[1])
+
+            if successeur in graphe.successors(joueur) and successeur not in joueurs:
+                # ajouter un saut en ligne droite
+                graphe.add_edge(prédécesseur, successeur)
+
+            else:
+                # ajouter les liens en diagonal
+                for successeur in list(graphe.successors(joueur)):
+                    if prédécesseur != successeur and successeur not in joueurs:
+                        graphe.add_edge(prédécesseur, successeur)
+
+    # ajouter les noeuds objectifs des deux joueurs
+    for x in range(1, 10):
+        graphe.add_edge((x, 9), 'B1')
+        graphe.add_edge((x, 1), 'B2')
+
+    return graphe
+
 infojeu = {
     "joueurs": [
         {"nom": "idul", "murs": 7, "pos": [5, 6]},
@@ -123,14 +191,20 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide (en dehors du damier).
         :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
-        if infojeu[f'{joueur}'] != 1 or infojeu[f'{joueur}'] != 2:
+
+        jfonction = [infojeu['joueurs'][0]['pos'], infojeu['joueurs'][1]['pos']]
+        mhfonction = infojeu['murs']['horizontaux']
+        mvfonction = infojeu['murs']['verticaux']
+
+        if joueur != 1 and joueur != 2:
             raise QuoridorError
-        elif 9 < infojeu[f'{joueur}']['pos'][0] < 1:
+        elif 9 < position[0] < 1:
             raise QuoridorError
-        elif 9 < infojeu[f'{joueur}']['pos'][1] < 1:
+        elif 9 < position[1] < 1:
             raise QuoridorError
-        #elif 
-        infojeu[f'{joueur}']['pos'] = position
+        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(infojeu['joueurs'][joueur - 1]['pos']):
+            raise QuoridorError 
+        infojeu['joueurs'][joueur - 1]['pos'] = position
 
 
     def état_partie(self):
