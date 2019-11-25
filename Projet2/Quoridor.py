@@ -1,7 +1,7 @@
 infojeu = {
     "joueurs": [
-        {"nom": "idul", "murs": 7, "pos": [5, 6]},
-        {"nom": "automate", "murs": 3, "pos": [5, 7]}
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 1]}
     ],
     "murs": {
         "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
@@ -192,9 +192,8 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour cette orientation.
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
-        pass
-<<<<<<< HEAD
-=======
+        
 
-Quoridor(["steph", "étienne"])
->>>>>>> 3a7a01dc2581f821db65940c8107698e4ca8d1a4
+test1 = Quoridor(["steph", "étienne"])
+x = test1.partie_terminée()
+print(x)
