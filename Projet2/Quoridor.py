@@ -171,7 +171,17 @@ class Quoridor:
 
         :returns: le nom du gagnant si la partie est terminée; False autrement.
         """
-        pass
+        joueur1 = infojeu['joueurs'][0]['nom']
+        pos1 = infojeu['joueurs'][0]['pos'][1]
+        joueur2 = infojeu['joueurs'][1]['nom']
+        pos2 = infojeu['joueurs'][1]['pos'][1]
+        if pos1 == 9:
+            return joueur1
+        if pos2 == 1:
+            return joueur2
+        else:
+            return False
+        
 
     def placer_mur(self, joueur, position, orientation):
         """
@@ -186,5 +196,4 @@ class Quoridor:
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
         pass
-
-Quoridor(["steph"])
+Quoridor(["steph", "étienne"])
