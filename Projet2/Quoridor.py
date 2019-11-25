@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 infojeu = {
     "joueurs": [
         {"nom": "idul", "murs": 7, "pos": [5, 1]},
@@ -8,10 +9,23 @@ infojeu = {
         "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
     }
 }
+=======
+>>>>>>> efd2ed4bd6c3fc48d847334d7e93ef352e2af21d
 
+class QuoridorError(Exception):
+    pass
 
 class Quoridor:
-
+    infojeu = {
+        "joueurs": [
+            {"nom": "idul", "murs": 7, "pos": [5, 6]},
+            {"nom": "automate", "murs": 3, "pos": [5, 7]}
+        ],
+        "murs": {
+            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+            "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+        }
+    }
     def __init__(self, joueurs, murs=None):
         """
         Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés, 
@@ -31,23 +45,29 @@ class Quoridor:
 
         :raises QuoridorError: si l'argument 'joueurs' n'est pas itérable.
         :raises QuoridorError: si l'itérable de joueurs en contient plus de deux.
-        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif.
-        :raises QuoridorError: si la position d'un joueur est invalide.
+        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif. **
+        :raises QuoridorError: si la position d'un joueur est invalide. **
         :raises QuoridorError: si l'argument 'murs' n'est pas un dictionnaire lorsque présent.
-        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
-        :raises QuoridorError: si la position d'un mur est invalide.
+        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20. **
+        :raises QuoridorError: si la position d'un mur est invalide. **
         """
-        if joueurs[0] is str:
+        if hasattr(joueurs, '__iter__') == False:
+            raise QuoridorError
+        if len(joueurs) > 2:
+            raise QuoridorError
+        if type(joueurs[0]) is str:
             dictp1 = {"nom": joueurs[0], "murs": 10, "pos": [5, 1]}
         else:
             dictp1 = joueurs[0]
-        if joueurs[1] is str:
+        if type(joueurs[1]) is str:
             dictp2 = {"nom": joueurs[1], "murs": 10, "pos": [5, 9]}
         else:
             dictp2 = joueurs[1]
         if murs == None:
             murs = {"horizontaux": [], "verticaux": []}
-        infojeu = {
+        elif type(murs) != dict:
+            raise QuoridorError
+        self.infojeu = {
             "joueurs": [
                 dictp1,
                 dictp2
@@ -55,32 +75,29 @@ class Quoridor:
             "murs": murs
         }
 
-        print(infojeu)
-
-
     def __str__(self):
         """Permet de convertir un dictionnaire en damier ascii"""
         lignes = []
-        lignes += list("Légende: 1="+ str(infojeu["joueurs"][0]["nom"])+
-                    ', 2='+str(infojeu["joueurs"][1]["nom"]) + "\n")
+        lignes += list("Légende: 1="+ str(self.infojeu["joueurs"][0]["nom"])+
+                    ', 2='+str(self.infojeu["joueurs"][1]["nom"]) + "\n")
         lignes += list("   "+"-"*35+"\n")
         for i in range(1, 10):
             lignes += str(10-i) + " | "
             for j in range(1, 9):
                 strplayer = "."
-                if [j, 10-i] == infojeu["joueurs"][0]["pos"]:
+                if [j, 10-i] == self.infojeu["joueurs"][0]["pos"]:
                     strplayer = "1"
-                elif [j, 10-i] == infojeu["joueurs"][1]["pos"]:
+                elif [j, 10-i] == self.infojeu["joueurs"][1]["pos"]:
                     strplayer = "2"
-                if [j+1, 10-i] in infojeu["murs"]["verticaux"]:
+                if [j+1, 10-i] in self.infojeu["murs"]["verticaux"]:
                     lignes += list(strplayer + " | ")
-                elif [j+1, 9-i] in infojeu["murs"]["verticaux"]:
+                elif [j+1, 9-i] in self.infojeu["murs"]["verticaux"]:
                     lignes += list(strplayer + " | ")
                 else:
                     lignes += list(strplayer + "   ")
-            if [9, 10-i] == infojeu["joueurs"][0]["pos"]:
+            if [9, 10-i] == self.infojeu["joueurs"][0]["pos"]:
                 lignes += list("1 |")
-            elif [9, 10-i] == infojeu["joueurs"][1]["pos"]:
+            elif [9, 10-i] == self.infojeu["joueurs"][1]["pos"]:
                 lignes += list("2 |")
             else:
                 lignes += list(". |")
@@ -88,19 +105,19 @@ class Quoridor:
                 lignes += list("\n  |")
             for k in range(1, 9):
                 if i != 9:
-                    if [k, 10-i] in infojeu["murs"]["horizontaux"]:
+                    if [k, 10-i] in self.infojeu["murs"]["horizontaux"]:
                         lignes += list("----")
-                    elif [k-1, 10-i] in infojeu["murs"]["horizontaux"] and \
-                        [k+1, 9-i] in infojeu["murs"]["verticaux"]:
+                    elif [k-1, 10-i] in self.infojeu["murs"]["horizontaux"] and \
+                        [k+1, 9-i] in self.infojeu["murs"]["verticaux"]:
                         lignes += list("---|")
-                    elif [k-1, 10-i] in infojeu["murs"]["horizontaux"]:
+                    elif [k-1, 10-i] in self.infojeu["murs"]["horizontaux"]:
                         lignes += list("--- ")
-                    elif [k+1, 9-i] in infojeu["murs"]["verticaux"]:
+                    elif [k+1, 9-i] in self.infojeu["murs"]["verticaux"]:
                         lignes += list("   |")
                     else:
                         lignes += list("    ")
             if i != 9:
-                if [8, 10-i] in infojeu["murs"]["horizontaux"]:
+                if [8, 10-i] in self.infojeu["murs"]["horizontaux"]:
                     lignes += list("---|")
                 else:
                     lignes += list("   |")
@@ -108,7 +125,7 @@ class Quoridor:
         lignes += list("--|"+ "-"*35+"\n")
         lignes += list("  | 1   2   3   4   5   6   7   8   9")
         lignes = ''.join(lignes)
-        print(lignes)
+        return lignes
     
     def déplacer_jeton(self, joueur, position):
         """
@@ -120,7 +137,15 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide (en dehors du damier).
         :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
-        pass
+        if infojeu[f'{joueur}'] != 1 or infojeu[f'{joueur}'] != 2:
+            raise QuoridorError
+        elif 9 < infojeu[f'{joueur}']['pos'][0] < 1:
+            raise QuoridorError
+        elif 9 < infojeu[f'{joueur}']['pos'][1] < 1:
+            raise QuoridorError
+        #elif 
+        infojeu[f'{joueur}']['pos'] = position
+
 
     def état_partie(self):
         """
@@ -192,8 +217,17 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour cette orientation.
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
+<<<<<<< HEAD
         
 
 test1 = Quoridor(["steph", "étienne"])
 x = test1.partie_terminée()
 print(x)
+=======
+        pass
+
+joueurs = ["steph", "étienne"]
+test1 = Quoridor(joueurs)
+print(test1.infojeu)
+print(test1)
+>>>>>>> efd2ed4bd6c3fc48d847334d7e93ef352e2af21d
