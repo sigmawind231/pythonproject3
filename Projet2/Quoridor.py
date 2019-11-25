@@ -8,7 +8,8 @@ infojeu = {
         "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
     }
 }
-
+class QuoridorError(Exception):
+    pass
 
 class Quoridor:
 
@@ -37,6 +38,8 @@ class Quoridor:
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide.
         """
+        if hasattr(joueurs, '__iter__') == False
+            raise QuoridorError
         if joueurs[0] is str:
             dictp1 = {"nom": joueurs[0], "murs": 10, "pos": [5, 1]}
         else:
@@ -184,4 +187,4 @@ class Quoridor:
         """
         pass
 
-Quoridor(["steph", "étienne"])
+Quoridor(["steph"])
