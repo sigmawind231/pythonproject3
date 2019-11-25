@@ -212,19 +212,18 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
 
-        jfonction = [infojeu['joueurs'][0]['pos'], infojeu['joueurs'][1]['pos']]
-        mhfonction = infojeu['murs']['horizontaux']
-        mvfonction = infojeu['murs']['verticaux']
-
+        jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
+        mhfonction = self.infojeu['murs']['horizontaux']
+        mvfonction = self.infojeu['murs']['verticaux']
         if joueur != 1 and joueur != 2:
             raise QuoridorError
         elif 9 < position[0] < 1:
             raise QuoridorError
         elif 9 < position[1] < 1:
             raise QuoridorError
-        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(infojeu['joueurs'][joueur - 1]['pos']):
+        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
             raise QuoridorError 
-        infojeu['joueurs'][joueur - 1]['pos'] = position
+        self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
     def état_partie(self):
         """
@@ -284,7 +283,6 @@ class Quoridor:
         else:
             return False
         
-
     def placer_mur(self, joueur, position, orientation):
         """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
@@ -299,7 +297,16 @@ class Quoridor:
         """
         pass
 
-joueurs = ["steph", "étienne"]
-test1 = Quoridor(joueurs)
-print(test1.état_partie())
+joueurs = [
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 2]}
+    ]
+murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+    }
+test1 = Quoridor(joueurs, murstest)
+print(test1)
+test1.déplacer_jeton(2, (6, 2))
+print(test1)
+print(test1.infojeu)
 ##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
