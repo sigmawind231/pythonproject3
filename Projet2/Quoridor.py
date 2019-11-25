@@ -1,3 +1,13 @@
+infojeu = {
+    "joueurs": [
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 1]}
+    ],
+    "murs": {
+        "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+    }
+}
 
 class QuoridorError(Exception):
     pass
@@ -188,10 +198,10 @@ class Quoridor:
 
         :returns: le nom du gagnant si la partie est terminée; False autrement.
         """
-        joueur1 = infojeu['joueurs'][0]['nom']
-        pos1 = infojeu['joueurs'][0]['pos'][1]
-        joueur2 = infojeu['joueurs'][1]['nom']
-        pos2 = infojeu['joueurs'][1]['pos'][1]
+        joueur1 = self.infojeu['joueurs'][0]['nom']
+        pos1 = self.infojeu['joueurs'][0]['pos'][1]
+        joueur2 = self.infojeu['joueurs'][1]['nom']
+        pos2 = self.infojeu['joueurs'][1]['pos'][1]
         if pos1 == 9:
             return joueur1
         if pos2 == 1:
