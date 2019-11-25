@@ -1,6 +1,8 @@
 import networkx as nx
 
 
+import random as rnd
+
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
     """
     Crée le graphe des déplacements admissibles pour les joueurs.
@@ -264,7 +266,17 @@ class Quoridor:
         :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
         :raises QuoridorError: si la partie est déjà terminée.
         """
-        pass
+        if joueur != 1 and joueur != 2:
+            raise QuoridorError
+        if self.partie_terminée == False:
+            raise QuoridorError
+        jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
+        mhfonction = self.infojeu['murs']['horizontaux']
+        mvfonction = self.infojeu['murs']['verticaux']
+        posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
+        while type(posrandom) is str:
+            posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
+        self.déplacer_jeton(joueur, posrandom)
 
     def partie_terminée(self):
         """
@@ -306,7 +318,7 @@ murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
     }
 test1 = Quoridor(joueurs, murstest)
 print(test1)
-test1.déplacer_jeton(2, (6, 2))
+test1.jouer_coup(1)
 print(test1)
 print(test1.infojeu)
 ##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
