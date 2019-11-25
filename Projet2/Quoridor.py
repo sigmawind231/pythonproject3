@@ -37,6 +37,26 @@ class Quoridor:
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide.
         """
+        if joueurs[0] is str:
+            dictp1 = {"nom": joueurs[0], "murs": 10, "pos": [5, 1]}
+        else:
+            dictp1 = joueurs[0]
+        if joueurs[1] is str:
+            dictp2 = {"nom": joueurs[1], "murs": 10, "pos": [5, 9]}
+        else:
+            dictp2 = joueurs[1]
+        if murs == None:
+            murs = {"horizontaux": [], "verticaux": []}
+        infojeu = {
+            "joueurs": [
+                dictp1,
+                dictp2
+            ],
+            "murs": murs
+        }
+
+        print(infojeu)
+
 
     def __str__(self):
         """Permet de convertir un dictionnaire en damier ascii"""
@@ -163,3 +183,5 @@ class Quoridor:
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
         pass
+
+Quoridor(["steph", "étienne"])
