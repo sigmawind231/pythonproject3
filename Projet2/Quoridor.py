@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-=======
 import networkx as nx
 
 
 import random as rnd
+
 
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
     """
@@ -69,18 +68,6 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
         graphe.add_edge((x, 1), 'B2')
 
     return graphe
-
-infojeu = {
-    "joueurs": [
-        {"nom": "idul", "murs": 7, "pos": [5, 1]},
-        {"nom": "automate", "murs": 3, "pos": [5, 1]}
-    ],
-    "murs": {
-        "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-    }
-}
->>>>>>> e5f2344e0e49386fc85faa841c9d1b915b90c482
 
 class QuoridorError(Exception):
     pass
@@ -148,6 +135,38 @@ class Quoridor:
             raise QuoridorError
         if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
             raise QuoridorError
+        for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
+            posx = valeur[0]
+            posy = valeur[1]
+            for i, value in enumerate(self.infojeu['murs']['horizontaux']):
+                if (value[0] == posx and value[1] == posy) and i != j:
+                    raise QuoridorError
+                elif (value[0] == posx+1 or value[0] == posx-1) and value[1] == posy:
+                    raise QuoridorError
+                elif posx >= 9 or posx < 1:
+                    raise QuoridorError
+                elif posy <= 1 or posy > 9:
+                    raise QuoridorError
+            for i, value in enumerate(self.infojeu['murs']['verticaux']):
+                if value[0] == posx+1 and value[1] == posy - 1:
+                    print(value)
+                    print((posx, posy))
+                    raise QuoridorError
+        for j, valeur in enumerate(self.infojeu['murs']['verticaux']):
+            posx = valeur[0]
+            posy = valeur[1]
+            for i, value in enumerate(self.infojeu['murs']['verticaux']):
+                if value[0] == posx and value[1] == posy and i != j:
+                    raise QuoridorError
+                elif (value[1] == posy-1 or value[1] == posy+1) and value[0] == posx:
+                    raise QuoridorError
+                elif posy >= 9 or posy < 1:
+                    raise QuoridorError
+                elif posx <= 1 or posx > 9:
+                    raise QuoridorError
+            for i, value in enumerate(self.infojeu['murs']['horizontaux']):
+                if value[0] == posx-1 and value[1] == posy +1 :
+                    raise QuoridorError
 
     def __str__(self):
         """
@@ -276,10 +295,26 @@ class Quoridor:
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
         mvfonction = self.infojeu['murs']['verticaux']
+        choix = rnd.choice([True, False])
+        if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
+            choix = True
         posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
-        while type(posrandom) is str:
-            posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
-        self.déplacer_jeton(joueur, posrandom)
+        if choix is True:
+            while type(posrandom) is str:
+                posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
+            self.déplacer_jeton(joueur, posrandom)
+        if choix is False:
+            haserror = True
+            while haserror == True:
+                lignex = rnd.randint(1, 9)
+                colonney = rnd.randint(1, 9)
+                orientationrand = rnd.choice(["horizontal", "vertical"])
+                try:
+                    self.placer_mur(joueur, (lignex, colonney), orientationrand)
+                    haserror = False
+                except QuoridorError as err:
+                    print(err)
+                    haserror = True
 
     def partie_terminée(self):
         """
@@ -299,7 +334,7 @@ class Quoridor:
             return False
         
     def placer_mur(self, joueur, position, orientation):
-         """
+        """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
 
         :param joueur: le numéro du joueur (1 ou 2).
@@ -310,41 +345,60 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour cette orientation.
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
-        if self.infojeu['joueurs'][joueur-1]['murs'] == 10: #:raises QuoridorError: si le joueur a déjà placé tous ses murs.
+        posx = position[0]
+        posy = position[1]
+        modificationDirection = ''
+        if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
             raise QuoridorError
-        elif joueur == 1 or joueur == 2:#:raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-            posx = position[0]
-            posy = position[1]
+        elif joueur == 1 or joueur == 2:
             if orientation == 'horizontal':
+                modificationDirection = 'horizontaux'
                 for i, value in enumerate(self.infojeu['murs']['horizontaux']):
-                    if value[0] == posx and value[1] == posy:#:raises QuoridorError: si un mur occupe déjà cette position.
+                    if value[0] == posx and value[1] == posy:
                         raise QuoridorError
-                    elif value[0]+1 == posx and value[1]-1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                    elif (value[0] == posx+1 or value[0] == posx-1) and value[1] == posy:
                         raise QuoridorError
-                    elif value[0]+1== posx and value[1] == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                    elif posx >= 9 or posx < 1:
                         raise QuoridorError
-                    elif posx == 9:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                    elif posy <= 1 or posy > 9:
                         raise QuoridorError
-                infojeu['murs']['horizontaux'].append([posx, posy])
-                afficher_damier_ascii(infojeu)
-            elif orientation == 'vertical':
                 for i, value in enumerate(self.infojeu['murs']['verticaux']):
-                    if value[0] == posx and value[1] == posy:#:raises QuoridorError: si un mur occupe déjà cette position.
+                    if value[0] == posx+1 and value[1] == posy-1:
                         raise QuoridorError
-                    elif value[0]-1 == posx and value[1]+1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+            elif orientation == 'vertical':
+                modificationDirection = 'verticaux'
+                for i, value in enumerate(self.infojeu['murs']['verticaux']):
+                    if value[0] == posx and value[1] == posy:
                         raise QuoridorError
-                    elif value[0]== posx and value[1]+1 == posy:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                    elif (value[1] == posy-1 or value[1] == posy+1) and value[0] == posx:
                         raise QuoridorError
-                    elif posy == 9:#:raises QuoridorError: si la position est invalide pour cette orientation.
+                    elif posy >= 9 or posy < 1:
                         raise QuoridorError
-                self.infojeu['murs']['verticaux'].append([posx, posy])
-                afficher_damier_ascii(infojeu)
+                    elif posx <= 1 or posx > 9:
+                        raise QuoridorError
+                for i, value in enumerate(self.infojeu['murs']['horizontaux']):
+                    if value[0] == posx-1 and value[1] == posy+1 :
+                        raise QuoridorError
         else:
             raise QuoridorError
+        jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
+        mhfonction = self.infojeu['murs']['horizontaux']
+        mvfonction = self.infojeu['murs']['verticaux']
+        graphe = construire_graphe(jfonction, mhfonction, mvfonction)
+        self.infojeu['murs'][modificationDirection].append([posx, posy])
+        if joueur == 1:
+            if not nx.has_path(graphe, tuple(self.infojeu['joueurs'][joueur-1]['pos']), 'B1'):
+                self.infojeu['murs'][modificationDirection].pop()
+                raise QuoridorError
+        else:
+            if not nx.has_path(graphe, tuple(self.infojeu['joueurs'][joueur-1]['pos']), 'B2'):
+                self.infojeu['murs'][modificationDirection].pop()
+                raise QuoridorError
+        self.infojeu['joueurs'][joueur-1]['murs'] -= 1
 
 joueurs = [
         {"nom": "idul", "murs": 7, "pos": [5, 1]},
-        {"nom": "automate", "murs": 3, "pos": [5, 2]}
+        {"nom": "automate", "murs": 3, "pos": [5, 9]}
     ]
 murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
         "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
@@ -353,5 +407,27 @@ test1 = Quoridor(joueurs, murstest)
 print(test1)
 test1.jouer_coup(1)
 print(test1)
-print(test1.infojeu)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+
+
 ##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
