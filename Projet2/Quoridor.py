@@ -76,7 +76,12 @@ class Quoridor:
         }
 
     def __str__(self):
-        """Permet de convertir un dictionnaire en damier ascii"""
+        """
+        Produire la représentation en art ascii correspondant à l'état actuel de la partie. 
+        Cette représentation est la même que celle du TP précédent.
+
+        :returns: la chaîne de caractères de la représentation.
+        """
         lignes = []
         lignes += list("Légende: 1="+ str(self.infojeu["joueurs"][0]["nom"])+
                     ', 2='+str(self.infojeu["joueurs"][1]["nom"]) + "\n")
