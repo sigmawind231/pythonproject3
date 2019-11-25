@@ -3,16 +3,6 @@ class QuoridorError(Exception):
     pass
 
 class Quoridor:
-    infojeu = {
-        "joueurs": [
-            {"nom": "idul", "murs": 7, "pos": [5, 6]},
-            {"nom": "automate", "murs": 3, "pos": [5, 7]}
-        ],
-        "murs": {
-            "horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-            "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-        }
-    }
     def __init__(self, joueurs, murs=None):
         """
         Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés, 
@@ -32,10 +22,10 @@ class Quoridor:
 
         :raises QuoridorError: si l'argument 'joueurs' n'est pas itérable.
         :raises QuoridorError: si l'itérable de joueurs en contient plus de deux.
-        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif. **
-        :raises QuoridorError: si la position d'un joueur est invalide. **
+        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif.
+        :raises QuoridorError: si la position d'un joueur est invalide.
         :raises QuoridorError: si l'argument 'murs' n'est pas un dictionnaire lorsque présent.
-        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20. **
+        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide. **
         """
         if hasattr(joueurs, '__iter__') == False:
@@ -61,6 +51,20 @@ class Quoridor:
             ],
             "murs": murs
         }
+        if self.infojeu["joueurs"][0]["murs"] > 10 or self.infojeu["joueurs"][0]["murs"] < 0:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["murs"] > 10 or self.infojeu["joueurs"][1]["murs"] < 0:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["pos"][0] < 1 or self.infojeu["joueurs"][0]["pos"][0] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["pos"][1] < 1 or self.infojeu["joueurs"][0]["pos"][1] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["pos"][0] < 1 or self.infojeu["joueurs"][1]["pos"][0] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
+            raise QuoridorError
+        if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
+            raise QuoridorError
 
     def __str__(self):
         """
@@ -166,8 +170,7 @@ class Quoridor:
         situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes y et y+1.
         """
-        pass
-
+        return self.infojeu
     def jouer_coup(self, joueur):
         """
         Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel 
@@ -213,5 +216,5 @@ class Quoridor:
 
 joueurs = ["steph", "étienne"]
 test1 = Quoridor(joueurs)
-print(test1.infojeu)
-print(test1)
+print(test1.état_partie())
+##print(test1.infojeu["joueurs"][0]["murs"] + test1.infojeu["joueurs"][1]["murs"] + len(test1.infojeu["murs"]["horizontaux"]) + len(test1.infojeu["murs"]["verticaux"]))
