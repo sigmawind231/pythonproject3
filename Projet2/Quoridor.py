@@ -193,10 +193,10 @@ class Quoridor:
 
         :returns: le nom du gagnant si la partie est terminée; False autrement.
         """
-        joueur1 = infojeu['joueurs'][0]['nom']
-        pos1 = infojeu['joueurs'][0]['pos'][1]
-        joueur2 = infojeu['joueurs'][1]['nom']
-        pos2 = infojeu['joueurs'][1]['pos'][1]
+        joueur1 = self.infojeu['joueurs'][0]['nom']
+        pos1 = self.infojeu['joueurs'][0]['pos'][1]
+        joueur2 = self.infojeu['joueurs'][1]['nom']
+        pos2 = self.infojeu['joueurs'][1]['pos'][1]
         if pos1 == 9:
             return joueur1
         if pos2 == 1:
@@ -217,17 +217,9 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide pour cette orientation.
         :raises QuoridorError: si le joueur a déjà placé tous ses murs.
         """
-<<<<<<< HEAD
-        
-
-test1 = Quoridor(["steph", "étienne"])
-x = test1.partie_terminée()
-print(x)
-=======
         pass
 
 joueurs = ["steph", "étienne"]
 test1 = Quoridor(joueurs)
 print(test1.infojeu)
 print(test1)
->>>>>>> efd2ed4bd6c3fc48d847334d7e93ef352e2af21d
