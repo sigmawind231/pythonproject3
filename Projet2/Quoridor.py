@@ -378,7 +378,7 @@ class Quoridor:
                         raise QuoridorError
                 for i, value in enumerate(self.infojeu['murs']['horizontaux']):
                     if value[0] == posx-1 and value[1] == posy+1 :
-                        raise QuoridorError
+                        raise QuoridorErrors
         else:
             raise QuoridorError
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
@@ -395,39 +395,3 @@ class Quoridor:
                 self.infojeu['murs'][modificationDirection].pop()
                 raise QuoridorError
         self.infojeu['joueurs'][joueur-1]['murs'] -= 1
-
-joueurs = [
-        {"nom": "idul", "murs": 7, "pos": [5, 1]},
-        {"nom": "automate", "murs": 3, "pos": [5, 9]}
-    ]
-murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-    }
-test1 = Quoridor(joueurs, murstest)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-
-
-##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
