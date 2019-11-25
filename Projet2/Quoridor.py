@@ -124,7 +124,15 @@ class Quoridor:
         :raises QuoridorError: si la position est invalide (en dehors du damier).
         :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
         """
-        pass
+        if infojeu[f'{joueur}'] != 1 or infojeu[f'{joueur}'] != 2:
+            raise QuoridorError
+        elif 9 < infojeu[f'{joueur}']['pos'][0] < 1:
+            raise QuoridorError
+        elif 9 < infojeu[f'{joueur}']['pos'][1] < 1:
+            raise QuoridorError
+        #elif 
+        infojeu[f'{joueur}']['pos'] = position
+
 
     def état_partie(self):
         """
