@@ -152,7 +152,6 @@ class Quoridor:
         #elif 
         infojeu[f'{joueur}']['pos'] = position
 
-
     def état_partie(self):
         """
         Produire l'état actuel de la partie.
@@ -181,6 +180,7 @@ class Quoridor:
         mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes y et y+1.
         """
         return self.infojeu
+
     def jouer_coup(self, joueur):
         """
         Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel 
@@ -192,6 +192,7 @@ class Quoridor:
         :raises QuoridorError: si la partie est déjà terminée.
         """
         pass
+
     def partie_terminée(self):
         """
         Déterminer si la partie est terminée.
@@ -227,4 +228,4 @@ class Quoridor:
 joueurs = ["steph", "étienne"]
 test1 = Quoridor(joueurs)
 print(test1.état_partie())
-##print(test1.infojeu["joueurs"][0]["murs"] + test1.infojeu["joueurs"][1]["murs"] + len(test1.infojeu["murs"]["horizontaux"]) + len(test1.infojeu["murs"]["verticaux"]))
+##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
