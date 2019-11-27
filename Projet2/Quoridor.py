@@ -90,10 +90,6 @@ class Quoridor:
         positions (x, y) des murs horizontaux, et une clé 'verticaux' associée à la liste des
         positions (x, y) des murs verticaux. Par défaut, il n'y a aucun mur placé sur le jeu.
 
-        :raises QuoridorError: si l'argument 'joueurs' n'est pas itérable.
-        :raises QuoridorError: si l'itérable de joueurs en contient plus de deux.
-        :raises QuoridorError: si le nombre de murs qu'un joueur peut placer est >10, ou négatif.
-        :raises QuoridorError: si la position d'un joueur est invalide.
         :raises QuoridorError: si l'argument 'murs' n'est pas un dictionnaire lorsque présent.
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide. **
@@ -114,13 +110,7 @@ class Quoridor:
             murs = {"horizontaux": [], "verticaux": []}
         elif type(murs) != dict:
             raise QuoridorError
-        self.infojeu = {
-            "joueurs": [
-                dictp1,
-                dictp2
-            ],
-            "murs": murs
-        }
+        self.infojeu = {"joueurs": [dictp1, dictp2], "murs": murs}
         if self.infojeu["joueurs"][0]["murs"] > 10 or self.infojeu["joueurs"][0]["murs"] < 0:
             raise QuoridorError
         if self.infojeu["joueurs"][1]["murs"] > 10 or self.infojeu["joueurs"][1]["murs"] < 0:
