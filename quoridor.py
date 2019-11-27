@@ -1,7 +1,5 @@
-import networkx as nx
-
-
 import random as rnd
+import networkx as nx
 
 
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
@@ -85,7 +83,7 @@ class Quoridor:
         placer 10 murs. Dans le cas où l'argument est un dictionnaire, celui-ci doit contenir
         une clé 'nom' identifiant le joueur, une clé 'murs' spécifiant le nombre de murs qu'il
         peut encore placer, et une clé 'pos' qui spécifie sa position (x, y) actuelle.
-        
+
         :param murs: un dictionnaire contenant une clé 'horizontaux' associée à la liste des
         positions (x, y) des murs horizontaux, et une clé 'verticaux' associée à la liste des
         positions (x, y) des murs verticaux. Par défaut, il n'y a aucun mur placé sur le jeu.
@@ -319,8 +317,7 @@ class Quoridor:
             return joueur1
         if pos2 == 1:
             return joueur2
-        else:
-            return False
+        return False
 
     def placer_mur(self, joueur, position, orientation):
         """
