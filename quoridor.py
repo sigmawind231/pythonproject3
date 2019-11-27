@@ -81,17 +81,17 @@ class Quoridor:
             raise QuoridorError
         if len(joueurs) > 2:
             raise QuoridorError
-        if type(joueurs[0]) is str:
+        if isinstance(joueurs[0], str):
             dictp1 = {"nom": joueurs[0], "murs": 10, "pos": [5, 1]}
         else:
             dictp1 = joueurs[0]
-        if type(joueurs[1]) is str:
+        if isinstance(joueurs[1], str):
             dictp2 = {"nom": joueurs[1], "murs": 10, "pos": [5, 9]}
         else:
             dictp2 = joueurs[1]
         if murs is None:
             murs = {"horizontaux": [], "verticaux": []}
-        elif type(murs) != dict:
+        elif not isinstance(murs, dict):
             raise QuoridorError
         self.infojeu = {"joueurs": [dictp1, dictp2], "murs": murs}
         if self.infojeu["joueurs"][0]["murs"] > 10 or self.infojeu["joueurs"][0]["murs"] < 0:
