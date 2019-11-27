@@ -220,7 +220,7 @@ class Quoridor:
         return self.infojeu
 
     def jouer_coup(self, joueur):
-        
+
         """Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel
         de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un
         mur horizontal ou vertical."""
@@ -254,7 +254,7 @@ class Quoridor:
                     haserror = True
 
     def partie_terminée(self):
-        
+
         """Déterminer si la partie est terminée."""
 
         joueur1 = self.infojeu['joueurs'][0]['nom']
