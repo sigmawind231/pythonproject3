@@ -216,8 +216,8 @@ class Quoridor:
             raise QuoridorError
         elif 9 < position[1] < 1:
             raise QuoridorError
-        C = construire_graphe(jfonction, mhfonction, mvfonction)
-        elif position not in C.successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
+        elif position not in (construire_graphe(jfonction, mhfonction,
+                              mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))):
             raise QuoridorError
         self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
