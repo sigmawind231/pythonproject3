@@ -1,3 +1,6 @@
+'''module quoridor'''
+
+
 import random as rnd
 import networkx as nx
 
@@ -63,10 +66,13 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
 
 
 class QuoridorError(Exception):
+    '''QuoridorError'''
     pass
 
 
 class Quoridor:
+    '''Quoridor'''
+
     def __init__(self, joueurs, murs=None):
         """
         Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés,
@@ -87,7 +93,7 @@ class Quoridor:
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide. **
         """
-        if hasattr(joueurs, '__iter__') == False:
+        if not hasattr(joueurs, '__iter__'):
             raise QuoridorError
         if len(joueurs) > 2:
             raise QuoridorError
@@ -116,7 +122,9 @@ class Quoridor:
             raise QuoridorError
         if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
             raise QuoridorError
-        if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
+        A = self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"]
+        B = len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) 
+        if  (A + B) != 20:
             raise QuoridorError
         for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
             posx = valeur[0]
