@@ -275,7 +275,7 @@ class Quoridor:
             choix = True
         posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
         if choix is True:
-            while type(posrandom) is str:
+            while isinstance(posrandom, str):
                 posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
             self.déplacer_jeton(joueur, posrandom)
         if choix is False:
