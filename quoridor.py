@@ -67,7 +67,6 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
 
 class QuoridorError(Exception):
     '''QuoridorError'''
-    pass
 
 
 class Quoridor:
@@ -77,21 +76,6 @@ class Quoridor:
         """
         Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés,
         en s'assurant de faire une copie profonde de tout ce qui a besoin d'être copié.
-
-        :param joueurs: un itérable de deux joueurs dont le premier est toujours celui qui
-        débute la partie. Un joueur est soit une chaîne de caractères soit un dictionnaire.
-        Dans le cas d'une chaîne, il s'agit du nom du joueur. Selon le rang du joueur dans
-        l'itérable, sa position est soit (5,1) soit (5,9), et chaque joueur peut initialement
-        placer 10 murs. Dans le cas où l'argument est un dictionnaire, celui-ci doit contenir
-        une clé 'nom' identifiant le joueur, une clé 'murs' spécifiant le nombre de murs qu'il
-        peut encore placer, et une clé 'pos' qui spécifie sa position (x, y) actuelle.
-
-        :param murs: un dictionnaire contenant une clé 'horizontaux' associée à la liste des
-        positions (x, y) des murs horizontaux, et une clé 'verticaux' associée à la liste des
-        positions (x, y) des murs verticaux. Par défaut, il n'y a aucun mur placé sur le jeu.
-
-        :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
-        :raises QuoridorError: si la position d'un mur est invalide. **
         """
         if not hasattr(joueurs, '__iter__'):
             raise QuoridorError
@@ -122,8 +106,8 @@ class Quoridor:
             raise QuoridorError
         if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
             raise QuoridorError
-        A = self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"]
-        B = len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) 
+        a = self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"]
+        b = len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"])
         if  (A + B) != 20:
             raise QuoridorError
         for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
@@ -257,7 +241,7 @@ class Quoridor:
         }
 
         où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée
-        au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est 
+        au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est
         associée à sa position sur le damier. Une position est représentée par un tuple
         de deux coordonnées x et y, où 1<=x<=9 et 1<=y<=9.
 
@@ -337,12 +321,12 @@ class Quoridor:
         """
         posx = position[0]
         posy = position[1]
-        modificationDirection = ''
+        modificationdirection = ''
         if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
             raise QuoridorError
         elif joueur == 1 or joueur == 2:
             if orientation == 'horizontal':
-                modificationDirection = 'horizontaux'
+                modificationdirection = 'horizontaux'
                 for i, value in enumerate(self.infojeu['murs']['horizontaux']):
                     if value[0] == posx and value[1] == posy:
                         raise QuoridorError
@@ -356,7 +340,7 @@ class Quoridor:
                     if value[0] == posx+1 and value[1] == posy-1:
                         raise QuoridorError
             elif orientation == 'vertical':
-                modificationDirection = 'verticaux'
+                modificationdirection = 'verticaux'
                 for i, value in enumerate(self.infojeu['murs']['verticaux']):
                     if value[0] == posx and value[1] == posy:
                         raise QuoridorError
@@ -375,14 +359,14 @@ class Quoridor:
         mhfonction = self.infojeu['murs']['horizontaux']
         mvfonction = self.infojeu['murs']['verticaux']
         graphe = construire_graphe(jfonction, mhfonction, mvfonction)
-        self.infojeu['murs'][modificationDirection].append([posx, posy])
+        self.infojeu['murs'][modificationdirection].append([posx, posy])
         if joueur == 1:
             if not nx.has_path(graphe, tuple(self.infojeu['joueurs'][joueur-1]['pos']), 'B1'):
-                self.infojeu['murs'][modificationDirection].pop()
+                self.infojeu['murs'][modificationdirection].pop()
                 raise QuoridorError
         else:
             if not nx.has_path(graphe, tuple(self.infojeu['joueurs'][joueur-1]['pos']), 'B2'):
-                self.infojeu['murs'][modificationDirection].pop()
+                self.infojeu['murs'][modificationdirection].pop()
                 raise QuoridorError
         self.infojeu['joueurs'][joueur-1]['murs'] -= 1
 
