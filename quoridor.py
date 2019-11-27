@@ -120,7 +120,10 @@ class Quoridor:
             raise QuoridorError
         if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
             raise QuoridorError
-        if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
+        if self.infojeu["joueurs"][0]["murs"] +
+           self.infojeu["joueurs"][1]["murs"] +
+           len(self.infojeu["murs"]["horizontaux"]) +
+           len(self.infojeu["murs"]["verticaux"]) != 20:
             raise QuoridorError
         for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
             posx = valeur[0]
