@@ -89,7 +89,7 @@ class Quoridor:
             dictp2 = {"nom": joueurs[1], "murs": 10, "pos": [5, 9]}
         else:
             dictp2 = joueurs[1]
-        if murs == None:
+        if murs is None:
             murs = {"horizontaux": [], "verticaux": []}
         elif type(murs) != dict:
             raise QuoridorError
@@ -108,7 +108,7 @@ class Quoridor:
             raise QuoridorError
         a = self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"]
         b = len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"])
-        if  (A + B) != 20:
+        if  (a + b) != 20:
             raise QuoridorError
         for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
             posx = valeur[0]
@@ -265,7 +265,7 @@ class Quoridor:
         """
         if joueur != 1 and joueur != 2:
             raise QuoridorError
-        if self.partie_terminée == False:
+        if not self.partie_terminée:
             raise QuoridorError
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
