@@ -197,15 +197,8 @@ class Quoridor:
         return lignes
 
     def déplacer_jeton(self, joueur, position):
-        """
-        Pour le joueur spécifié, déplacer son jeton à la position spécifiée.
 
-        :param joueur: un entier spécifiant le numéro du joueur (1 ou 2).
-        :param position: le tuple (x, y) de la position du jeton (1<=x<=9 et 1<=y<=9).
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si la position est invalide (en dehors du damier).
-        :raises QuoridorError: si la position est invalide pour l'état actuel du jeu.
-        """
+        """Pour le joueur spécifié, déplacer son jeton à la position spécifiée."""
 
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
@@ -221,44 +214,17 @@ class Quoridor:
         self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
     def état_partie(self):
-        """
-        Produire l'état actuel de la partie.
 
-        :returns: une copie de l'état actuel du jeu sous la forme d'un dictionnaire:
-        {
-            'joueurs': [
-                {'nom': nom1, 'murs': n1, 'pos': (x1, y1)},
-                {'nom': nom2, 'murs': n2, 'pos': (x2, y2)},
-            ],
-            'murs': {
-                'horizontaux': [...],
-                'verticaux': [...],
-            }
-        }
+        """Produire l'état actuel de la partie."""
 
-        où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée
-        au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est
-        associée à sa position sur le damier. Une position est représentée par un tuple
-        de deux coordonnées x et y, où 1<=x<=9 et 1<=y<=9.
-
-        Les murs actuellement placés sur le damier sont énumérés dans deux listes de
-        positions (x, y). Les murs ont toujours une longueur de 2 cases et leur position
-        est relative à leur coin inférieur gauche. Par convention, un mur horizontal se
-        situe entre les lignes y-1 et y, et bloque les colonnes x et x+1. De même, un
-        mur vertical se situe entre les colonnes x-1 et x, et bloque les lignes y et y+1.
-        """
         return self.infojeu
 
     def jouer_coup(self, joueur):
-        """
-        Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel
+        
+        """Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel
         de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un
-        mur horizontal ou vertical.
+        mur horizontal ou vertical."""
 
-        :param joueur: un entier spécifiant le numéro du joueur (1 ou 2).
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si la partie est déjà terminée.
-        """
         if joueur != 1 and joueur != 2:
             raise QuoridorError
         if not self.partie_terminée:
@@ -288,11 +254,9 @@ class Quoridor:
                     haserror = True
 
     def partie_terminée(self):
-        """
-        Déterminer si la partie est terminée.
+        
+        """Déterminer si la partie est terminée."""
 
-        :returns: le nom du gagnant si la partie est terminée; False autrement.
-        """
         joueur1 = self.infojeu['joueurs'][0]['nom']
         pos1 = self.infojeu['joueurs'][0]['pos'][1]
         joueur2 = self.infojeu['joueurs'][1]['nom']
@@ -304,17 +268,9 @@ class Quoridor:
         return False
 
     def placer_mur(self, joueur, position, orientation):
-        """
-        Pour le joueur spécifié, placer un mur à la position spécifiée.
 
-        :param joueur: le numéro du joueur (1 ou 2).
-        :param position: le tuple (x, y) de la position du mur.
-        :param orientation: l'orientation du mur ('horizontal' ou 'vertical').
-        :raises QuoridorError: si le numéro du joueur est autre que 1 ou 2.
-        :raises QuoridorError: si un mur occupe déjà cette position.
-        :raises QuoridorError: si la position est invalide pour cette orientation.
-        :raises QuoridorError: si le joueur a déjà placé tous ses murs.
-        """
+        """Pour le joueur spécifié, placer un mur à la position spécifiée."""
+
         posx = position[0]
         posy = position[1]
         modificationdirection = ''
@@ -365,36 +321,3 @@ class Quoridor:
                 self.infojeu['murs'][modificationdirection].pop()
                 raise QuoridorError
         self.infojeu['joueurs'][joueur-1]['murs'] -= 1
-
-#joueurs = [
-        #{"nom": "idul", "murs": 7, "pos": [5, 1]},
-        #{"nom": "automate", "murs": 3, "pos": [5, 9]}
-    #]
-#murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-            #"verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]}
-
-#test1 = Quoridor(joueurs, murstest)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
-#print(test1)
-#test1.jouer_coup(1)
-#print(test1)
-#test1.jouer_coup(2)
