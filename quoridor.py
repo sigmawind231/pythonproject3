@@ -216,7 +216,7 @@ class Quoridor:
             raise QuoridorError
         elif 9 < position[1] < 1:
             raise QuoridorError
-        elif position not in (construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))):
+        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
             raise QuoridorError
         self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
@@ -276,7 +276,7 @@ class Quoridor:
             self.déplacer_jeton(joueur, posrandom)
         if choix is False:
             haserror = True
-            while haserror == True:
+            while haserror:
                 lignex = rnd.randint(1, 9)
                 colonney = rnd.randint(1, 9)
                 orientationrand = rnd.choice(["horizontal", "vertical"])
@@ -372,6 +372,7 @@ class Quoridor:
     #]
 #murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
             #"verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]}
+
 #test1 = Quoridor(joueurs, murstest)
 #print(test1)
 #test1.jouer_coup(1)
