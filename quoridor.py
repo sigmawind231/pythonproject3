@@ -4,13 +4,7 @@ import networkx as nx
 
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
     """
-    Crée le graphe des déplacements admissibles pour les joueurs.
-
-    :param joueurs: une liste des positions (x,y) des joueurs.
-    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
-    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
-    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
-    """
+    Crée le graphe des déplacements admissibles pour les joueurs."""
     graphe = nx.DiGraph()
 
     # pour chaque colonne du damier
@@ -67,8 +61,10 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
 
     return graphe
 
+
 class QuoridorError(Exception):
     pass
+
 
 class Quoridor:
     def __init__(self, joueurs, murs=None):
@@ -120,10 +116,7 @@ class Quoridor:
             raise QuoridorError
         if self.infojeu["joueurs"][1]["pos"][1] < 1 or self.infojeu["joueurs"][1]["pos"][1] > 9:
             raise QuoridorError
-        if self.infojeu["joueurs"][0]["murs"] +
-           self.infojeu["joueurs"][1]["murs"] +
-           len(self.infojeu["murs"]["horizontaux"]) +
-           len(self.infojeu["murs"]["verticaux"]) != 20:
+        if self.infojeu["joueurs"][0]["murs"] + self.infojeu["joueurs"][1]["murs"] + len(self.infojeu["murs"]["horizontaux"]) + len(self.infojeu["murs"]["verticaux"]) != 20:
             raise QuoridorError
         for j, valeur in enumerate(self.infojeu['murs']['horizontaux']):
             posx = valeur[0]
