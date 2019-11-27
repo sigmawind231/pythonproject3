@@ -90,7 +90,6 @@ class Quoridor:
         positions (x, y) des murs horizontaux, et une clé 'verticaux' associée à la liste des
         positions (x, y) des murs verticaux. Par défaut, il n'y a aucun mur placé sur le jeu.
 
-        :raises QuoridorError: si l'argument 'murs' n'est pas un dictionnaire lorsque présent.
         :raises QuoridorError: si le total des murs placés et plaçables n'est pas égal à 20.
         :raises QuoridorError: si la position d'un mur est invalide. **
         """
@@ -368,7 +367,7 @@ class Quoridor:
                         raise QuoridorError
                 for i, value in enumerate(self.infojeu['murs']['horizontaux']):
                     if value[0] == posx-1 and value[1] == posy+1 :
-                        raise QuoridorErrors
+                        raise QuoridorError
         else:
             raise QuoridorError
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
@@ -385,3 +384,39 @@ class Quoridor:
                 self.infojeu['murs'][modificationDirection].pop()
                 raise QuoridorError
         self.infojeu['joueurs'][joueur-1]['murs'] -= 1
+
+joueurs = [
+        {"nom": "idul", "murs": 7, "pos": [5, 1]},
+        {"nom": "automate", "murs": 3, "pos": [5, 9]}
+    ]
+murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
+    }
+test1 = Quoridor(joueurs, murstest)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+print(test1)
+test1.jouer_coup(1)
+print(test1)
+test1.jouer_coup(2)
+
+
+##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
