@@ -144,12 +144,8 @@ class Quoridor:
                     raise QuoridorError
 
     def __str__(self):
-        """
-        Produire la représentation en art ascii correspondant à l'état actuel de la partie.
-        Cette représentation est la même que celle du TP précédent.
 
-        :returns: la chaîne de caractères de la représentation.
-        """
+        """Produire la représentation en art ascii"""
         lignes = []
         lignes += list("Légende: 1="+ str(self.infojeu["joueurs"][0]["nom"])+
                        ', 2='+str(self.infojeu["joueurs"][1]["nom"]) + "\n")
@@ -370,37 +366,34 @@ class Quoridor:
                 raise QuoridorError
         self.infojeu['joueurs'][joueur-1]['murs'] -= 1
 
-joueurs = [
-        {"nom": "idul", "murs": 7, "pos": [5, 1]},
-        {"nom": "automate", "murs": 3, "pos": [5, 9]}
-    ]
-murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-            "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]}
-test1 = Quoridor(joueurs, murstest)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-print(test1)
-test1.jouer_coup(1)
-print(test1)
-test1.jouer_coup(2)
-
-
-##print(infojeu["joueurs"][0]["murs"] + infojeu["joueurs"][1]["murs"] + len(infojeu["murs"]["horizontaux"]) + len(infojeu["murs"]["verticaux"]))
+#joueurs = [
+        #{"nom": "idul", "murs": 7, "pos": [5, 1]},
+        #{"nom": "automate", "murs": 3, "pos": [5, 9]}
+    #]
+#murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
+            #"verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]}
+#test1 = Quoridor(joueurs, murstest)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
+#print(test1)
+#test1.jouer_coup(1)
+#print(test1)
+#test1.jouer_coup(2)
