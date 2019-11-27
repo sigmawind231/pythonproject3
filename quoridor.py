@@ -75,15 +75,15 @@ class QuoridorError(Exception):
 class Quoridor:
     def __init__(self, joueurs, murs=None):
         """
-        Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés, 
+        Initialiser une partie de Quoridor avec les joueurs et les murs spécifiés,
         en s'assurant de faire une copie profonde de tout ce qui a besoin d'être copié.
 
-        :param joueurs: un itérable de deux joueurs dont le premier est toujours celui qui 
-        débute la partie. Un joueur est soit une chaîne de caractères soit un dictionnaire. 
-        Dans le cas d'une chaîne, il s'agit du nom du joueur. Selon le rang du joueur dans 
+        :param joueurs: un itérable de deux joueurs dont le premier est toujours celui qui
+        débute la partie. Un joueur est soit une chaîne de caractères soit un dictionnaire.
+        Dans le cas d'une chaîne, il s'agit du nom du joueur. Selon le rang du joueur dans
         l'itérable, sa position est soit (5,1) soit (5,9), et chaque joueur peut initialement
-        placer 10 murs. Dans le cas où l'argument est un dictionnaire, celui-ci doit contenir 
-        une clé 'nom' identifiant le joueur, une clé 'murs' spécifiant le nombre de murs qu'il 
+        placer 10 murs. Dans le cas où l'argument est un dictionnaire, celui-ci doit contenir
+        une clé 'nom' identifiant le joueur, une clé 'murs' spécifiant le nombre de murs qu'il
         peut encore placer, et une clé 'pos' qui spécifie sa position (x, y) actuelle.
         
         :param murs: un dictionnaire contenant une clé 'horizontaux' associée à la liste des
@@ -154,19 +154,19 @@ class Quoridor:
                 elif posx <= 1 or posx > 9:
                     raise QuoridorError
             for i, value in enumerate(self.infojeu['murs']['horizontaux']):
-                if value[0] == posx-1 and value[1] == posy +1 :
+                if value[0] == posx-1 and value[1] == posy+1:
                     raise QuoridorError
 
     def __str__(self):
         """
-        Produire la représentation en art ascii correspondant à l'état actuel de la partie. 
+        Produire la représentation en art ascii correspondant à l'état actuel de la partie.
         Cette représentation est la même que celle du TP précédent.
 
         :returns: la chaîne de caractères de la représentation.
         """
         lignes = []
         lignes += list("Légende: 1="+ str(self.infojeu["joueurs"][0]["nom"])+
-                    ', 2='+str(self.infojeu["joueurs"][1]["nom"]) + "\n")
+                       ', 2='+str(self.infojeu["joueurs"][1]["nom"]) + "\n")
         lignes += list("   "+"-"*35+"\n")
         for i in range(1, 10):
             lignes += str(10-i) + " | "
@@ -213,7 +213,7 @@ class Quoridor:
         lignes += list("  | 1   2   3   4   5   6   7   8   9")
         lignes = ''.join(lignes)
         return lignes
-    
+
     def déplacer_jeton(self, joueur, position):
         """
         Pour le joueur spécifié, déplacer son jeton à la position spécifiée.
@@ -235,7 +235,7 @@ class Quoridor:
         elif 9 < position[1] < 1:
             raise QuoridorError
         elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
-            raise QuoridorError 
+            raise QuoridorError
         self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
     def état_partie(self):
@@ -253,10 +253,10 @@ class Quoridor:
                 'verticaux': [...],
             }
         }
-        
-        où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée 
+
+        où la clé 'nom' d'un joueur est associée à son nom, la clé 'murs' est associée
         au nombre de murs qu'il peut encore placer sur ce damier, et la clé 'pos' est 
-        associée à sa position sur le damier. Une position est représentée par un tuple 
+        associée à sa position sur le damier. Une position est représentée par un tuple
         de deux coordonnées x et y, où 1<=x<=9 et 1<=y<=9.
 
         Les murs actuellement placés sur le damier sont énumérés dans deux listes de
@@ -269,8 +269,8 @@ class Quoridor:
 
     def jouer_coup(self, joueur):
         """
-        Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel 
-        de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un 
+        Pour le joueur spécifié, jouer automatiquement son meilleur coup pour l'état actuel
+        de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un
         mur horizontal ou vertical.
 
         :param joueur: un entier spécifiant le numéro du joueur (1 ou 2).
@@ -321,7 +321,7 @@ class Quoridor:
             return joueur2
         else:
             return False
-        
+
     def placer_mur(self, joueur, position, orientation):
         """
         Pour le joueur spécifié, placer un mur à la position spécifiée.
@@ -366,7 +366,7 @@ class Quoridor:
                     elif posx <= 1 or posx > 9:
                         raise QuoridorError
                 for i, value in enumerate(self.infojeu['murs']['horizontaux']):
-                    if value[0] == posx-1 and value[1] == posy+1 :
+                    if value[0] == posx-1 and value[1] == posy+1:
                         raise QuoridorError
         else:
             raise QuoridorError
@@ -390,8 +390,7 @@ joueurs = [
         {"nom": "automate", "murs": 3, "pos": [5, 9]}
     ]
 murstest = {"horizontaux": [[4, 4], [2, 6], [3, 8], [5, 8], [7, 8]],
-        "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]
-    }
+            "verticaux": [[6, 2], [4, 4], [2, 5], [7, 5], [7, 7]]}
 test1 = Quoridor(joueurs, murstest)
 print(test1)
 test1.jouer_coup(1)
