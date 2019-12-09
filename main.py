@@ -1,17 +1,22 @@
 """Module principal du jeu"""
 import argparse
+import copy
 
-from api import débuter_partie, jouer_coup, lister_parties
+from quoridor import Quoridor
+from api import débuter_partie, jouer_coup
 
 
 def analyser_commande():
     """Permet d'utiliser la command line"""
     parser = argparse.ArgumentParser(
-        description="Jeu Quoridor - phase 1")
+        description="Jeu Quoridor - phase 3")
     parser.add_argument(dest='idul', type=str, help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister", dest='lister',
+    parser.add_argument("-a", "--automatique", dest='auto',
                         action="store_true",
-                        help="Lister les identifiants de vos 20 dernières parties.")
+                        help="Activer le mode automatique.")
+    parser.add_argument("-x", "--graphique", dest='graph',
+                        action="store_true",
+                        help="Activer le mode graphique.")
     args = parser.parse_args()
     return args
 
@@ -67,10 +72,31 @@ def afficher_damier_ascii(infojeu):
     lignes = ''.join(lignes)
     print(lignes)
 
+def automatique():
+    identifiant, etat = débuter_partie("sttem")
+    partie = Quoridor(etat["joueurs"], etat['murs'])
+    print(partie)
+    while partie.partie_terminée() == False:
+        before = copy.deepcopy(partie.état_partie())
+        partie.jouer_coup(1)
+        after = copy.deepcopy(partie.état_partie())
+        print(partie)
+        if before["joueurs"][0]["pos"] != after["joueurs"][0]["pos"]:
+            etat = jouer_coup(identifiant, "D", after["joueurs"][0]["pos"])
+        elif len(after["murs"]["horizontaux"]) != len(before["murs"]["horizontaux"]):
+            etat = jouer_coup(identifiant, "MH", after["murs"]["horizontaux"][len(after["murs"]["horizontaux"])-1])
+        elif len(after["murs"]["verticaux"]) != len(before["murs"]["verticaux"]):
+            etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
+        partie = Quoridor(etat["joueurs"], etat['murs'])
+
 if __name__ == "__main__":
     __args__ = analyser_commande()
-    if __args__.lister:
-        print(lister_parties(__args__.idul))
+    if __args__.auto and __args__.graph == False:
+        automatique()
+    elif __args__.graph and __args__.auto == False:
+        print('graphique')
+    elif __args__.graph and __args__.auto:
+        print('autograph')
     else:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]

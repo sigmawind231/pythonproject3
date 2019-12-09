@@ -1,13 +1,19 @@
 '''module quoridor'''
 
-
+import copy
 import random as rnd
 import networkx as nx
 
 
 def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
     """
-    Crée le graphe des déplacements admissibles pour les joueurs."""
+    Crée le graphe des déplacements admissibles pour les joueurs.
+
+    :param joueurs: une liste des positions (x,y) des joueurs.
+    :param murs_horizontaux: une liste des positions (x,y) des murs horizontaux.
+    :param murs_verticaux: une liste des positions (x,y) des murs verticaux.
+    :returns: le graphe bidirectionnel (en networkX) des déplacements admissibles.
+    """
     graphe = nx.DiGraph()
 
     # pour chaque colonne du damier
@@ -23,6 +29,7 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
                 graphe.add_edge((x, y), (x, y-1))
             if y < 9:
                 graphe.add_edge((x, y), (x, y+1))
+
     # retirer tous les arcs qui croisent les murs horizontaux
     for x, y in murs_horizontaux:
         graphe.remove_edge((x, y-1), (x, y))
@@ -37,27 +44,36 @@ def construire_graphe(joueurs, murs_horizontaux, murs_verticaux):
         graphe.remove_edge((x-1, y+1), (x, y+1))
         graphe.remove_edge((x, y+1), (x-1, y+1))
 
-    # retirer tous les arcs qui pointent vers les positions des joueurs
-    # et ajouter les sauts en ligne droite ou en diagonale, selon le cas
-    for joueur in map(tuple, joueurs):
+    # s'assurer que les positions des joueurs sont bien des tuples (et non des listes)
+    j1, j2 = tuple(joueurs[0]), tuple(joueurs[1])
 
-        for prédécesseur in list(graphe.predecessors(joueur)):
-            graphe.remove_edge(prédécesseur, joueur)
+    # traiter le cas des joueurs adjacents
+    if j2 in graphe.successors(j1) or j1 in graphe.successors(j2):
 
-            # si admissible, ajouter un lien sauteur
-            successeur = (2*joueur[0]-prédécesseur[0], 2*joueur[1]-prédécesseur[1])
+        # retirer les liens entre les joueurs
+        graphe.remove_edge(j1, j2)
+        graphe.remove_edge(j2, j1)
 
-            if successeur in graphe.successors(joueur) and successeur not in joueurs:
-                # ajouter un saut en ligne droite
-                graphe.add_edge(prédécesseur, successeur)
+        def ajouter_lien_sauteur(noeud, voisin):
+            """
+            :param noeud: noeud de départ du lien.
+            :param voisin: voisin par dessus lequel il faut sauter.
+            """
+            saut = 2*voisin[0]-noeud[0], 2*voisin[1]-noeud[1]
+
+            if saut in graphe.successors(voisin):
+                # ajouter le saut en ligne droite
+                graphe.add_edge(noeud, saut)
 
             else:
-                # ajouter les liens en diagonal
-                for successeur in list(graphe.successors(joueur)):
-                    if prédécesseur != successeur and successeur not in joueurs:
-                        graphe.add_edge(prédécesseur, successeur)
+                # ajouter les sauts en diagonale
+                for saut in graphe.successors(voisin):
+                    graphe.add_edge(noeud, saut)
 
-    # ajouter les noeuds objectifs des deux joueurs
+        ajouter_lien_sauteur(j1, j2)
+        ajouter_lien_sauteur(j2, j1)
+
+    # ajouter les destinations finales des joueurs
     for x in range(1, 10):
         graphe.add_edge((x, 9), 'B1')
         graphe.add_edge((x, 1), 'B2')
@@ -229,29 +245,65 @@ class Quoridor:
             raise QuoridorError
         if not self.partie_terminée:
             raise QuoridorError
+        opposant = 2
+        if joueur == 2:
+            opposant = 1
+            
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
         mvfonction = self.infojeu['murs']['verticaux']
-        choix = rnd.choice([True, False])
+        resteMurs = True
         if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
-            choix = True
-        posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
-        if choix is True:
-            while isinstance(posrandom, str):
-                posrandom = rnd.choice(list(construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos']))))
-            self.déplacer_jeton(joueur, posrandom)
-        if choix is False:
-            haserror = True
-            while haserror:
-                lignex = rnd.randint(1, 9)
-                colonney = rnd.randint(1, 9)
-                orientationrand = rnd.choice(["horizontal", "vertical"])
-                try:
-                    self.placer_mur(joueur, (lignex, colonney), orientationrand)
-                    haserror = False
-                except QuoridorError as err:
-                    print(err)
-                    haserror = True
+            resteMurs = False
+        graph = construire_graphe(jfonction, mhfonction, mvfonction)
+        if nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur)) < nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant)):
+            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+            self.déplacer_jeton(joueur, path[1])
+        elif resteMurs:
+            shortestPathOpposant = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+            shortestPathJoueur = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+            lenghtMur = shortestPathOpposant - shortestPathJoueur
+            posMur = [0,0]
+            orientation = 'horizontal'
+            for i in range(1, 10):
+                for j in range(1, 10):
+                    modified = copy.deepcopy(mhfonction)
+                    modified.append([i, j])
+                    try:
+                        newgraph = construire_graphe(jfonction, modified, mvfonction)
+                        shortestPathOpposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        shortestPathJoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        hasPathOpposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        hasPathJoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        if (shortestPathOpposant - shortestPathJoueur) > lenghtMur and hasPathJoueur and hasPathOpposant:
+                            posMur = [i, j]
+                            lenghtMur = shortestPathOpposant - shortestPathJoueur
+                    except:
+                        pass
+            for i in range(1, 10):
+                for j in range(1, 10):
+                    modified = copy.deepcopy(mvfonction)
+                    modified.append([i, j])
+                    try:
+                        newgraph = construire_graphe(jfonction, mhfonction, modified)
+                        shortestPathOpposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        shortestPathJoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        hasPathOpposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        hasPathJoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        if (shortestPathOpposant - shortestPathJoueur) > lenghtMur and hasPathJoueur and hasPathOpposant:
+                            posMur = [i, j]
+                            lenghtMur = shortestPathOpposant - shortestPathJoueur
+                            orientation = 'vertical'
+                    except:
+                        pass
+            if posMur == [0, 0]:
+                path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                self.déplacer_jeton(joueur, path[1])
+            else:
+                self.placer_mur(joueur, posMur, orientation)
+        else:
+            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+            self.déplacer_jeton(joueur, path[1])
 
     def partie_terminée(self):
 
