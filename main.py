@@ -1,17 +1,20 @@
 """Module principal du jeu"""
 import argparse
 
-from api import débuter_partie, jouer_coup, lister_parties
+from api import débuter_partie, jouer_coup
 
 
 def analyser_commande():
     """Permet d'utiliser la command line"""
     parser = argparse.ArgumentParser(
-        description="Jeu Quoridor - phase 1")
+        description="Jeu Quoridor - phase 3")
     parser.add_argument(dest='idul', type=str, help="IDUL du joueur.")
-    parser.add_argument("-l", "--lister", dest='lister',
+    parser.add_argument("-a", "--automatique", dest='auto',
                         action="store_true",
-                        help="Lister les identifiants de vos 20 dernières parties.")
+                        help="Activer le mode automatique.")
+    parser.add_argument("-x", "--graphique", dest='graph',
+                        action="store_true",
+                        help="Activer le mode graphique.")
     args = parser.parse_args()
     return args
 
@@ -69,8 +72,12 @@ def afficher_damier_ascii(infojeu):
 
 if __name__ == "__main__":
     __args__ = analyser_commande()
-    if __args__.lister:
-        print(lister_parties(__args__.idul))
+    if __args__.auto and __args__.graph == False:
+        print('automatique')
+    elif __args__.graph and __args__.auto == False:
+        print('graphique')
+    elif __args__.graph and __args__.auto:
+        print('autograph')
     else:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]
