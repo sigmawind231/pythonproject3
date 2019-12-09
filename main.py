@@ -72,10 +72,27 @@ def afficher_damier_ascii(infojeu):
     lignes = ''.join(lignes)
     print(lignes)
 
+def automatique():
+    identifiant, etat = débuter_partie("sttem")
+    partie = Quoridor(etat["joueurs"], etat['murs'])
+    print(partie)
+    while partie.partie_terminée() == False:
+        before = copy.deepcopy(partie.état_partie())
+        partie.jouer_coup(1)
+        after = copy.deepcopy(partie.état_partie())
+        print(partie)
+        if before["joueurs"][0]["pos"] != after["joueurs"][0]["pos"]:
+            etat = jouer_coup(identifiant, "D", after["joueurs"][0]["pos"])
+        elif len(after["murs"]["horizontaux"]) != len(before["murs"]["horizontaux"]):
+            etat = jouer_coup(identifiant, "MH", after["murs"]["horizontaux"][len(after["murs"]["horizontaux"])-1])
+        elif len(after["murs"]["verticaux"]) != len(before["murs"]["verticaux"]):
+            etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
+        partie = Quoridor(etat["joueurs"], etat['murs'])
+
 if __name__ == "__main__":
     __args__ = analyser_commande()
     if __args__.auto and __args__.graph == False:
-        print('automatique')
+        automatique()
     elif __args__.graph and __args__.auto == False:
         print('graphique')
     elif __args__.graph and __args__.auto:
