@@ -1,8 +1,9 @@
 """Module principal du jeu"""
 import argparse
+import copy
 
 from api import débuter_partie, jouer_coup, lister_parties
-
+from quoridor import Quoridor
 
 def analyser_commande():
     """Permet d'utiliser la command line"""
