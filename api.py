@@ -25,3 +25,4 @@ def jouer_coup(id_partie, type_coup, position):
         raise StopIteration(f"{rep['gagnant']}")
     else:
         return rep['état']
+        

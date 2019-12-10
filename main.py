@@ -73,10 +73,11 @@ def afficher_damier_ascii(infojeu):
     print(lignes)
 
 def automatique(idul):
+    """Section automatique"""
     identifiant, etat = débuter_partie(idul)
     partie = Quoridor(etat["joueurs"], etat['murs'])
     print(partie)
-    while partie.partie_terminée() == False:
+    while not partie.partie_terminée():
         before = copy.deepcopy(partie.état_partie())
         partie.jouer_coup(1)
         after = copy.deepcopy(partie.état_partie())
@@ -90,10 +91,11 @@ def automatique(idul):
         partie = Quoridor(etat["joueurs"], etat['murs'])
 
 def autograph(idul):
+    """Section autograph"""
     identifiant, etat = débuter_partie(idul)
     partie = QuoridorX(etat["joueurs"], etat['murs'])
     partie.afficher()
-    while partie.partie_terminée() == False:
+    while not partie.partie_terminée():
         before = copy.deepcopy(partie.état_partie())
         partie.jouer_coup(1)
         after = copy.deepcopy(partie.état_partie())
@@ -108,9 +110,9 @@ def autograph(idul):
 
 if __name__ == "__main__":
     __args__ = analyser_commande()
-    if __args__.auto and __args__.graph == False:
+    if __args__.auto and not __args__.graph:
         automatique(__args__.idul)
-    elif __args__.graph and __args__.auto == False:
+    elif __args__.graph and not __args__.auto:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]
         partie = QuoridorX(__infojeu1__["joueurs"], __infojeu1__['murs'])
@@ -125,7 +127,6 @@ if __name__ == "__main__":
                 partie.afficher()
             except RuntimeError as err:
                 print(err)
-                pass
             except StopIteration as err:
                 print(err)
                 break
