@@ -17,6 +17,7 @@ class QuoridorX(Quoridor):
         self.afficher
 
     def afficher(self):
+        """Méthode afficher"""
         self.tur.reset()
 
         dictio = self.infojeu

@@ -218,7 +218,7 @@ class Quoridor:
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
         mvfonction = self.infojeu['murs']['verticaux']
-        if joueur != 1 and joueur != 2:
+        if joueur not in (1, 2):
             raise QuoridorError
         elif 9 < position[0] < 1:
             raise QuoridorError
@@ -241,7 +241,7 @@ class Quoridor:
         de la partie. Ce coup est soit le déplacement de son jeton, soit le placement d'un
         mur horizontal ou vertical."""
 
-        if joueur != 1 and joueur != 2:
+        if joueur not in (1, 2):
             raise QuoridorError
         if not self.partie_terminée:
             raise QuoridorError
@@ -255,7 +255,7 @@ class Quoridor:
         if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
             restemurs = False
         graph = construire_graphe(jfonction, mhfonction, mvfonction)
-        if nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur)) < nx.shortest_path_length(graph,tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant)):
+        if nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur)) < nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant)):
             path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
             self.déplacer_jeton(joueur, path[1])
         elif restemurs:
@@ -270,8 +270,8 @@ class Quoridor:
                     modified.append([i, j])
                     try:
                         newgraph = construire_graphe(jfonction, modified, mvfonction)
-                        shortestpathopposant = nx.shortest_path_length(newgraph,tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        shortestpathjoueur = nx.shortest_path_length(newgraph,tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        shortestpathopposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        shortestpathjoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
                         haspathopposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
                         haspathjoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
                         if (shortestpathopposant - shortestpathjoueur) > lenghtmur and haspathjoueur and haspathopposant:
@@ -285,8 +285,8 @@ class Quoridor:
                     modified.append([i, j])
                     try:
                         newgraph = construire_graphe(jfonction, mhfonction, modified)
-                        shortestpathopposant = nx.shortest_path_length(newgraph,tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        shortestpathjoueur = nx.shortest_path_length(newgraph,tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+                        shortestpathopposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
+                        shortestpathjoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
                         haspathopposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
                         haspathjoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
                         if (shortestpathopposant - shortestpathjoueur) > lenghtmur and haspathjoueur and haspathopposant:
@@ -327,10 +327,10 @@ class Quoridor:
         modificationdirection = ''
         if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
             raise QuoridorError
-        elif joueur == 1 or joueur == 2:
+        elif joueur in (1, 2):
             if orientation == 'horizontal':
                 modificationdirection = 'horizontaux'
-                for i, value in enumerate(self.infojeu['murs']['horizontaux']):
+                for _, value in enumerate(self.infojeu['murs']['horizontaux']):
                     if value[0] == posx and value[1] == posy:
                         raise QuoridorError
                     elif (value[0] == posx+1 or value[0] == posx-1) and value[1] == posy:
