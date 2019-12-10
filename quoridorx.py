@@ -1,12 +1,14 @@
+"""Ce programme est quoridorx"""
 from turtle import Turtle, Screen
 from quoridor import Quoridor
 
 
 class QuoridorX(Quoridor):
+    """Class QuoridorX"""
     tur = Turtle()
     loadwindow = Screen()
 
-    def __init__(self, joueurs, murs = None):
+    def __init__(self, joueurs, murs=None):
         super().__init__(joueurs, murs)
         self.loadwindow.bgcolor('green')
         self.loadwindow.tracer(0)
@@ -62,24 +64,24 @@ class QuoridorX(Quoridor):
             self.tur.penup()
         for i in range(9):
             self.tur.penup()
-            self.tur.setpos(-200 , -170 + ((i)*40))
+            self.tur.setpos(-200, -170 + ((i)*40))
             self.tur.color('white')
             self.tur.write(f'{i + 1}', font=('Arial', 10))
             self.tur.penup()
 
         #Positionnement des joueurs
-        self.tur.setpos(-163 + (posxj-1)*40 , -170 + (posyj-1)*40)
+        self.tur.setpos(-163 + (posxj-1)*40, -170 + (posyj-1)*40)
         self.tur.color('white')
         self.tur.write('1', font=('Arial', 10))
 
-        self.tur.setpos(-163 + (posxa-1)*40 , -170 + (posya-1)*40)
+        self.tur.setpos(-163 + (posxa-1)*40, -170 + (posya-1)*40)
         self.tur.color('white')
         self.tur.write('2', font=('Arial', 10))
 
         #Positionnement des murs horizontaux
         for i in murshori:
             self.tur.penup()
-            self.tur.setpos(-175 + (i[0]-1)*40 , -180 + (i[1]-1)*40)
+            self.tur.setpos(-175 + (i[0]-1)*40, -180 + (i[1]-1)*40)
             self.tur.color('black')
             self.tur.pensize(3)
             self.tur.pendown()
@@ -94,10 +96,11 @@ class QuoridorX(Quoridor):
             self.tur.pensize(3)
             self.tur.pendown()
             self.tur.fd(70)
-        
+
+        #Ajout de la légende
         self.tur.penup()
-        self.tur.setpos(-200 , 190)
+        self.tur.setpos(-200, 190)
         self.tur.color('white')
         self.tur.write('Légende: 1='f'{iden1}'', 2='f'{iden2}', font=('Arial', 10))
         self.tur.penup()
-        #Ajout de la légende
+        
