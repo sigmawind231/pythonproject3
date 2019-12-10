@@ -1,7 +1,7 @@
 """Module principal du jeu"""
 import argparse
 import copy
-
+from quoridorx import QuoridorX
 from quoridor import Quoridor
 from api import débuter_partie, jouer_coup
 
@@ -89,14 +89,48 @@ def automatique():
             etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
         partie = Quoridor(etat["joueurs"], etat['murs'])
 
+def autograph():
+    identifiant, etat = débuter_partie("sttem")
+    partie = QuoridorX(etat["joueurs"], etat['murs'])
+    partie.afficher()
+    while partie.partie_terminée() == False:
+        before = copy.deepcopy(partie.état_partie())
+        partie.jouer_coup(1)
+        after = copy.deepcopy(partie.état_partie())
+        partie.afficher()
+        if before["joueurs"][0]["pos"] != after["joueurs"][0]["pos"]:
+            etat = jouer_coup(identifiant, "D", after["joueurs"][0]["pos"])
+        elif len(after["murs"]["horizontaux"]) != len(before["murs"]["horizontaux"]):
+            etat = jouer_coup(identifiant, "MH", after["murs"]["horizontaux"][len(after["murs"]["horizontaux"])-1])
+        elif len(after["murs"]["verticaux"]) != len(before["murs"]["verticaux"]):
+            etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
+        partie = QuoridorX(etat["joueurs"], etat['murs'])
+    
 if __name__ == "__main__":
     __args__ = analyser_commande()
     if __args__.auto and __args__.graph == False:
         automatique()
     elif __args__.graph and __args__.auto == False:
-        print('graphique')
+        __infojeutupple__ = débuter_partie(__args__.idul)
+        __infojeu1__ = __infojeutupple__[1]
+        partie = QuoridorX(__infojeu1__["joueurs"], __infojeu1__['murs'])
+        partie.afficher()
+        while True:
+            try:
+                __coup_type__ = input("Choisir un coup: 'D', 'MH' ou 'MV'")
+                __position_coup__ = input("veuillez inscrire la position du coup sous format '(x, y)'")
+                __infojeu1__ = jouer_coup(__infojeutupple__[0], __coup_type__, \
+                                    __position_coup__)
+                partie = QuoridorX(__infojeu1__["joueurs"], __infojeu1__['murs'])
+                partie.afficher()
+            except RuntimeError as err:
+                print(err)
+                pass
+            except StopIteration as err:
+                print(err)
+                break
     elif __args__.graph and __args__.auto:
-        print('autograph')
+        autograph()
     else:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]
