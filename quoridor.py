@@ -1,7 +1,6 @@
 '''module quoridor'''
 
 import copy
-import random as rnd
 import networkx as nx
 
 
@@ -225,7 +224,9 @@ class Quoridor:
             raise QuoridorError
         elif 9 < position[1] < 1:
             raise QuoridorError
-        elif position not in construire_graphe(jfonction, mhfonction, mvfonction).successors(tuple(self.infojeu['joueurs'][joueur - 1]['pos'])):
+        elif position not in construire_graphe(jfonction, mhfonction, 
+                                               mvfonction).successors(tuple(self.infojeu['joueurs']
+                                               [joueur - 1]['pos'])):
             raise QuoridorError
         self.infojeu['joueurs'][joueur - 1]['pos'] = list(position)
 
@@ -252,18 +253,24 @@ class Quoridor:
         jfonction = [self.infojeu['joueurs'][0]['pos'], self.infojeu['joueurs'][1]['pos']]
         mhfonction = self.infojeu['murs']['horizontaux']
         mvfonction = self.infojeu['murs']['verticaux']
-        resteMurs = True
+        restemurs = True
         if self.infojeu['joueurs'][joueur-1]['murs'] == 0:
-            resteMurs = False
+            restemurs = False
         graph = construire_graphe(jfonction, mhfonction, mvfonction)
-        if nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur)) < nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant)):
-            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+        if nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), 
+                                   "B"+str(joueur)) < nx.shortest_path_length(graph,
+                                   tuple(self.infojeu['joueurs']
+                                   [opposant - 1]['pos']), "B"+str(opposant)):
+            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs']
+                                    [joueur - 1]['pos']), "B"+str(joueur))
             self.déplacer_jeton(joueur, path[1])
-        elif resteMurs:
-            shortestPathOpposant = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-            shortestPathJoueur = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
-            lenghtMur = shortestPathOpposant - shortestPathJoueur
-            posMur = [0,0]
+        elif restemurs:
+            shortestpathopposant = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs']
+                                                           [opposant - 1]['pos']), "B"+str(opposant))
+            shortestpathjoueur = nx.shortest_path_length(graph, tuple(self.infojeu['joueurs']
+                                                         [joueur - 1]['pos']), "B"+str(joueur))
+            lenghtmur = shortestpathopposant - shortestpathjoueur
+            posmur = [0, 0]
             orientation = 'horizontal'
             for i in range(1, 10):
                 for j in range(1, 10):
@@ -271,13 +278,22 @@ class Quoridor:
                     modified.append([i, j])
                     try:
                         newgraph = construire_graphe(jfonction, modified, mvfonction)
-                        shortestPathOpposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        shortestPathJoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
-                        hasPathOpposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        hasPathJoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
-                        if (shortestPathOpposant - shortestPathJoueur) > lenghtMur and hasPathJoueur and hasPathOpposant:
-                            posMur = [i, j]
-                            lenghtMur = shortestPathOpposant - shortestPathJoueur
+                        shortestpathopposant = nx.shortest_path_length(newgraph,
+                                                                       tuple(self.infojeu['joueurs']
+                                                                       [opposant - 1]['pos']),
+                                                                       "B"+str(opposant))
+                        shortestpathjoueur = nx.shortest_path_length(newgraph,
+                                                                     tuple(self.infojeu['joueurs']
+                                                                     [joueur - 1]['pos']),
+                                                                     "B"+str(joueur))
+                        haspathopposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs']
+                                                                      [opposant - 1]['pos']),
+                                                                      "B"+str(opposant))
+                        haspathjoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs']
+                                                                    [joueur - 1]['pos']), "B"+str(joueur))
+                        if (shortestpathopposant - shortestpathjoueur) > lenghtmur and haspathjoueur and haspathopposant:
+                            posmur = [i, j]
+                            lenghtmur = shortestpathopposant - shortestpathjoueur
                     except:
                         pass
             for i in range(1, 10):
@@ -286,23 +302,34 @@ class Quoridor:
                     modified.append([i, j])
                     try:
                         newgraph = construire_graphe(jfonction, mhfonction, modified)
-                        shortestPathOpposant = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        shortestPathJoueur = nx.shortest_path_length(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
-                        hasPathOpposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][opposant - 1]['pos']), "B"+str(opposant))
-                        hasPathJoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
-                        if (shortestPathOpposant - shortestPathJoueur) > lenghtMur and hasPathJoueur and hasPathOpposant:
-                            posMur = [i, j]
-                            lenghtMur = shortestPathOpposant - shortestPathJoueur
+                        shortestpathopposant = nx.shortest_path_length(newgraph,
+                                                                       tuple(self.infojeu['joueurs']
+                                                                       [opposant - 1]['pos']),
+                                                                       "B"+str(opposant))
+                        shortestpathjoueur = nx.shortest_path_length(newgraph,
+                                                                     tuple(self.infojeu['joueurs']
+                                                                     [joueur - 1]['pos']),
+                                                                     "B"+str(joueur))
+                        haspathopposant = nx.has_path(newgraph, tuple(self.infojeu['joueurs']
+                                                                      [opposant - 1]['pos']),
+                                                                      "B"+str(opposant))
+                        haspathjoueur = nx.has_path(newgraph, tuple(self.infojeu['joueurs']
+                                                    [joueur - 1]['pos']), "B"+str(joueur))
+                        if (shortestpathopposant - shortestpathjoueur) > lenghtmur and haspathjoueur and haspathopposant:
+                            posmur = [i, j]
+                            lenghtmur = shortestpathopposant - shortestpathjoueur
                             orientation = 'vertical'
                     except:
                         pass
-            if posMur == [0, 0]:
-                path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+            if posmur == [0, 0]:
+                path = nx.shortest_path(graph, tuple(self.infojeu['joueurs']
+                                        [joueur - 1]['pos']), "B"+str(joueur))
                 self.déplacer_jeton(joueur, path[1])
             else:
-                self.placer_mur(joueur, posMur, orientation)
+                self.placer_mur(joueur, posmur, orientation)
         else:
-            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs'][joueur - 1]['pos']), "B"+str(joueur))
+            path = nx.shortest_path(graph, tuple(self.infojeu['joueurs']
+                                    [joueur - 1]['pos']), "B"+str(joueur))
             self.déplacer_jeton(joueur, path[1])
 
     def partie_terminée(self):
