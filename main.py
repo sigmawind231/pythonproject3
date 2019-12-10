@@ -72,8 +72,8 @@ def afficher_damier_ascii(infojeu):
     lignes = ''.join(lignes)
     print(lignes)
 
-def automatique():
-    identifiant, etat = débuter_partie("sttem")
+def automatique(idul):
+    identifiant, etat = débuter_partie(idul)
     partie = Quoridor(etat["joueurs"], etat['murs'])
     print(partie)
     while partie.partie_terminée() == False:
@@ -89,8 +89,8 @@ def automatique():
             etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
         partie = Quoridor(etat["joueurs"], etat['murs'])
 
-def autograph():
-    identifiant, etat = débuter_partie("sttem")
+def autograph(idul):
+    identifiant, etat = débuter_partie(idul)
     partie = QuoridorX(etat["joueurs"], etat['murs'])
     partie.afficher()
     while partie.partie_terminée() == False:
@@ -105,11 +105,11 @@ def autograph():
         elif len(after["murs"]["verticaux"]) != len(before["murs"]["verticaux"]):
             etat = jouer_coup(identifiant, "MV", after["murs"]["verticaux"][len(after["murs"]["verticaux"])-1])
         partie = QuoridorX(etat["joueurs"], etat['murs'])
-    
+
 if __name__ == "__main__":
     __args__ = analyser_commande()
     if __args__.auto and __args__.graph == False:
-        automatique()
+        automatique(__args__.idul)
     elif __args__.graph and __args__.auto == False:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 print(err)
                 break
     elif __args__.graph and __args__.auto:
-        autograph()
+        autograph(__args__.idul)
     else:
         __infojeutupple__ = débuter_partie(__args__.idul)
         __infojeu1__ = __infojeutupple__[1]
